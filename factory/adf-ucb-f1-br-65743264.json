@@ -1,0 +1,11 @@
+{
+	"name": "adf-ucb-f1-br-65743264",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true,
+			"isExplicitlySet": false
+		}
+	},
+	"location": "brazilsouth"
+}
