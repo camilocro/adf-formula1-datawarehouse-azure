@@ -24,47 +24,27 @@
 		},
 		"schema": [
 			{
-				"name": "resultId",
-				"type": "String"
-			},
-			{
 				"name": "raceId",
 				"type": "String"
 			},
 			{
-				"name": "driverId",
+				"name": "year",
 				"type": "String"
 			},
 			{
-				"name": "constructorId",
+				"name": "round",
 				"type": "String"
 			},
 			{
-				"name": "number",
+				"name": "circuitId",
 				"type": "String"
 			},
 			{
-				"name": "grid",
+				"name": "name",
 				"type": "String"
 			},
 			{
-				"name": "position",
-				"type": "String"
-			},
-			{
-				"name": "positionText",
-				"type": "String"
-			},
-			{
-				"name": "positionOrder",
-				"type": "String"
-			},
-			{
-				"name": "points",
-				"type": "String"
-			},
-			{
-				"name": "laps",
+				"name": "date",
 				"type": "String"
 			},
 			{
@@ -72,27 +52,47 @@
 				"type": "String"
 			},
 			{
-				"name": "milliseconds",
+				"name": "url",
 				"type": "String"
 			},
 			{
-				"name": "fastestLap",
+				"name": "fp1_date",
 				"type": "String"
 			},
 			{
-				"name": "rank",
+				"name": "fp1_time",
 				"type": "String"
 			},
 			{
-				"name": "fastestLapTime",
+				"name": "fp2_date",
 				"type": "String"
 			},
 			{
-				"name": "fastestLapSpeed",
+				"name": "fp2_time",
 				"type": "String"
 			},
 			{
-				"name": "statusId",
+				"name": "fp3_date",
+				"type": "String"
+			},
+			{
+				"name": "fp3_time",
+				"type": "String"
+			},
+			{
+				"name": "quali_date",
+				"type": "String"
+			},
+			{
+				"name": "quali_time",
+				"type": "String"
+			},
+			{
+				"name": "sprint_date",
+				"type": "String"
+			},
+			{
+				"name": "sprint_time",
 				"type": "String"
 			}
 		]

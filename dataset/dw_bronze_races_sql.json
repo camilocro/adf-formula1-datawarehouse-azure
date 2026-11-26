@@ -12,47 +12,27 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "resultId",
-				"type": "nvarchar"
-			},
-			{
 				"name": "raceId",
 				"type": "nvarchar"
 			},
 			{
-				"name": "driverId",
+				"name": "year",
 				"type": "nvarchar"
 			},
 			{
-				"name": "constructorId",
+				"name": "round",
 				"type": "nvarchar"
 			},
 			{
-				"name": "number",
+				"name": "circuitId",
 				"type": "nvarchar"
 			},
 			{
-				"name": "grid",
+				"name": "name",
 				"type": "nvarchar"
 			},
 			{
-				"name": "position",
-				"type": "nvarchar"
-			},
-			{
-				"name": "positionText",
-				"type": "nvarchar"
-			},
-			{
-				"name": "positionOrder",
-				"type": "nvarchar"
-			},
-			{
-				"name": "points",
-				"type": "nvarchar"
-			},
-			{
-				"name": "laps",
+				"name": "date",
 				"type": "nvarchar"
 			},
 			{
@@ -60,27 +40,47 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "milliseconds",
+				"name": "url",
 				"type": "nvarchar"
 			},
 			{
-				"name": "fastestLap",
+				"name": "fp1_date",
 				"type": "nvarchar"
 			},
 			{
-				"name": "rank",
+				"name": "fp1_time",
 				"type": "nvarchar"
 			},
 			{
-				"name": "fastestLapTime",
+				"name": "fp2_date",
 				"type": "nvarchar"
 			},
 			{
-				"name": "fastestLapSpeed",
+				"name": "fp2_time",
 				"type": "nvarchar"
 			},
 			{
-				"name": "statusId",
+				"name": "fp3_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fp3_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "quali_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "quali_time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sprint_date",
+				"type": "nvarchar"
+			},
+			{
+				"name": "sprint_time",
 				"type": "nvarchar"
 			}
 		],
