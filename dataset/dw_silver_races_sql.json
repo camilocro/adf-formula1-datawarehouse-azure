@@ -1,0 +1,56 @@
+{
+	"name": "dw_silver_races_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "race_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "season_year",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "round_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "circuit_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "race_name",
+				"type": "varchar"
+			},
+			{
+				"name": "race_date",
+				"type": "date"
+			},
+			{
+				"name": "race_time_utc",
+				"type": "varchar"
+			},
+			{
+				"name": "sprint_date",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "races"
+		}
+	}
+}

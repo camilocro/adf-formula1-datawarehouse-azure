@@ -1,0 +1,91 @@
+{
+	"name": "dw_silver_sprint_results_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sprint_result_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "race_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driver_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "constructor_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "status_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "car_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "grid_position",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "final_position",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "position_order",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "points",
+				"type": "decimal",
+				"precision": 6,
+				"scale": 2
+			},
+			{
+				"name": "laps_completed",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "sprint_time_ms",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "fastest_lap_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "fastest_lap_ms",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "sprint_results"
+		}
+	}
+}

@@ -1,0 +1,45 @@
+{
+	"name": "dw_silver_lap_times_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "race_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driver_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "lap_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "lap_position",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "lap_time_ms",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "lap_times"
+		}
+	}
+}

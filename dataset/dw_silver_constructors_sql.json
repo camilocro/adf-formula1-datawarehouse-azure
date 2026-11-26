@@ -1,0 +1,37 @@
+{
+	"name": "dw_silver_constructors_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "constructor_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "constructor_ref",
+				"type": "varchar"
+			},
+			{
+				"name": "constructor_name",
+				"type": "varchar"
+			},
+			{
+				"name": "nationality",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "constructors"
+		}
+	}
+}

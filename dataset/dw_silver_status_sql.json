@@ -1,0 +1,29 @@
+{
+	"name": "dw_silver_status_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "status_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "status_description",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "status"
+		}
+	}
+}

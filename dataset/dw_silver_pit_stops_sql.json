@@ -1,0 +1,45 @@
+{
+	"name": "dw_silver_pit_stops_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "race_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driver_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "stop_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "lap_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "duration_ms",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "pit_stops"
+		}
+	}
+}

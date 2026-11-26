@@ -1,0 +1,54 @@
+{
+	"name": "dw_silver_drivers_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "driver_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driver_ref",
+				"type": "varchar"
+			},
+			{
+				"name": "permanent_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "driver_code",
+				"type": "char"
+			},
+			{
+				"name": "forename",
+				"type": "varchar"
+			},
+			{
+				"name": "surname",
+				"type": "varchar"
+			},
+			{
+				"name": "dob",
+				"type": "date"
+			},
+			{
+				"name": "nationality",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "drivers"
+		}
+	}
+}

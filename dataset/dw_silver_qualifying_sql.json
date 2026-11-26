@@ -1,0 +1,65 @@
+{
+	"name": "dw_silver_qualifying_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "qualify_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "race_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "driver_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "constructor_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "car_number",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "qualifying_position",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "q1_ms",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "q2_ms",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "q3_ms",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "qualifying"
+		}
+	}
+}

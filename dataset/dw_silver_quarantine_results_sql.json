@@ -1,0 +1,58 @@
+{
+	"name": "dw_silver_quarantine_results_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "silver"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "quarantine_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "raw_result_id",
+				"type": "varchar"
+			},
+			{
+				"name": "raw_race_id",
+				"type": "varchar"
+			},
+			{
+				"name": "raw_driver_id",
+				"type": "varchar"
+			},
+			{
+				"name": "raw_constructor_id",
+				"type": "varchar"
+			},
+			{
+				"name": "raw_points",
+				"type": "varchar"
+			},
+			{
+				"name": "quarantine_reason",
+				"type": "varchar"
+			},
+			{
+				"name": "_source_file",
+				"type": "varchar"
+			},
+			{
+				"name": "_rejected_at",
+				"type": "datetime2",
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "silver",
+			"table": "quarantine_results"
+		}
+	}
+}
