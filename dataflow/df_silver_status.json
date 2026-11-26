@@ -1,16 +1,78 @@
 {
-	"name": "dataflow1",
+	"name": "df_silver_status",
 	"properties": {
 		"folder": {
 			"name": "silver"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
-			"transformations": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_status_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeStatus"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_status_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverStatus"
+				}
+			],
+			"transformations": [
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
+				}
+			],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          statusId as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeStatus",
+				"bronzeStatus derive(statusId = iif(isNull(statusId) || trim(statusId) == '' || upper(trim(statusId)) == 'NULL' || upper(trim(statusId)) == 'N/A' || trim(statusId) == '\\\\N', toString(null()), trim(statusId)),",
+				"          status = iif(isNull(status) || trim(status) == '' || upper(trim(status)) == 'NULL' || upper(trim(status)) == 'N/A' || trim(status) == '\\\\N', toString(null()), trim(status))) ~> limpiarTodo",
+				"limpiarTodo derive(status_Id = toInteger(statusId),",
+				"          status_description = status) ~> convertirTipos",
+				"convertirTipos window(over(status_id = status_Id),",
+				"     asc(status_Id, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1 && !isNull(status_Id) && !isNull(status_description)) ~> soloValidos",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          status_id as integer,",
+				"          status_description as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          status_id = status_Id,",
+				"          status_description",
+				"     )) ~> silverStatus"
 			]
 		}
 	}
