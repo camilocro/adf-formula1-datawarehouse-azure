@@ -1,0 +1,105 @@
+{
+	"name": "df_bronze_results",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronze_results_csv",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeResults"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBronzeResults"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          resultId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          grid as string,",
+				"          position as string,",
+				"          positionText as string,",
+				"          positionOrder as string,",
+				"          points as string,",
+				"          laps as string,",
+				"          time as string,",
+				"          milliseconds as string,",
+				"          fastestLap as string,",
+				"          rank as string,",
+				"          fastestLapTime as string,",
+				"          fastestLapSpeed as string,",
+				"          statusId as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> bronzeResults",
+				"bronzeResults sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          resultId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          grid as string,",
+				"          position as string,",
+				"          positionText as string,",
+				"          positionOrder as string,",
+				"          points as string,",
+				"          laps as string,",
+				"          time as string,",
+				"          milliseconds as string,",
+				"          fastestLap as string,",
+				"          rank as string,",
+				"          fastestLapTime as string,",
+				"          fastestLapSpeed as string,",
+				"          statusId as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          resultId,",
+				"          raceId,",
+				"          driverId,",
+				"          constructorId,",
+				"          number,",
+				"          grid,",
+				"          position,",
+				"          positionText,",
+				"          positionOrder,",
+				"          points,",
+				"          laps,",
+				"          time,",
+				"          milliseconds,",
+				"          fastestLap,",
+				"          rank,",
+				"          fastestLapTime,",
+				"          fastestLapSpeed,",
+				"          statusId",
+				"     )) ~> sinkBronzeResults"
+			]
+		}
+	}
+}
