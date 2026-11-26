@@ -24,75 +24,39 @@
 		},
 		"schema": [
 			{
-				"name": "resultId",
+				"name": "circuitId",
 				"type": "String"
 			},
 			{
-				"name": "raceId",
+				"name": "circuitRef",
 				"type": "String"
 			},
 			{
-				"name": "driverId",
+				"name": "name",
 				"type": "String"
 			},
 			{
-				"name": "constructorId",
+				"name": "location",
 				"type": "String"
 			},
 			{
-				"name": "number",
+				"name": "country",
 				"type": "String"
 			},
 			{
-				"name": "grid",
+				"name": "lat",
 				"type": "String"
 			},
 			{
-				"name": "position",
+				"name": "lng",
 				"type": "String"
 			},
 			{
-				"name": "positionText",
+				"name": "alt",
 				"type": "String"
 			},
 			{
-				"name": "positionOrder",
-				"type": "String"
-			},
-			{
-				"name": "points",
-				"type": "String"
-			},
-			{
-				"name": "laps",
-				"type": "String"
-			},
-			{
-				"name": "time",
-				"type": "String"
-			},
-			{
-				"name": "milliseconds",
-				"type": "String"
-			},
-			{
-				"name": "fastestLap",
-				"type": "String"
-			},
-			{
-				"name": "rank",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapTime",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapSpeed",
-				"type": "String"
-			},
-			{
-				"name": "statusId",
+				"name": "url",
 				"type": "String"
 			}
 		]
