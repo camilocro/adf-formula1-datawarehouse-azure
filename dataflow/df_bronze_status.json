@@ -27,7 +27,7 @@
 			"transformations": [],
 			"scriptLines": [
 				"source(output(",
-				"          statusId as short,",
+				"          statusId as string,",
 				"          status as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
