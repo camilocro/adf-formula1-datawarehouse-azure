@@ -80,15 +80,7 @@
 				"type": "String"
 			},
 			{
-				"name": "rank",
-				"type": "String"
-			},
-			{
 				"name": "fastestLapTime",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapSpeed",
 				"type": "String"
 			},
 			{

@@ -68,15 +68,7 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "rank",
-				"type": "nvarchar"
-			},
-			{
 				"name": "fastestLapTime",
-				"type": "nvarchar"
-			},
-			{
-				"name": "fastestLapSpeed",
 				"type": "nvarchar"
 			},
 			{
