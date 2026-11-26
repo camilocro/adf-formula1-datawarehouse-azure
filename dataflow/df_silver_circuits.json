@@ -1,0 +1,117 @@
+{
+	"name": "df_silver_circuits",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_circuits_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeCircuits"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_circuits_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverCircuits"
+				}
+			],
+			"transformations": [
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "mapearPais"
+				},
+				{
+					"name": "normalizarTextos"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          circuitId as string,",
+				"          circuitRef as string,",
+				"          name as string,",
+				"          location as string,",
+				"          country as string,",
+				"          lat as string,",
+				"          lng as string,",
+				"          alt as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeCircuits",
+				"bronzeCircuits derive(circuitId = iif(isNull(circuitId) || trim(circuitId) == '' || upper(trim(circuitId)) == 'NULL' || upper(trim(circuitId)) == 'N/A' || trim(circuitId) == '\\\\N', toString(null()), trim(circuitId)),",
+				"          circuitRef = iif(isNull(circuitRef) || trim(circuitRef) == '' || upper(trim(circuitRef)) == 'NULL' || upper(trim(circuitRef)) == 'N/A' || trim(circuitRef) == '\\\\N', toString(null()), trim(circuitRef)),",
+				"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+				"          location = iif(isNull(location) || trim(location) == '' || upper(trim(location)) == 'NULL' || upper(trim(location)) == 'N/A' || trim(location) == '\\\\N', toString(null()), trim(location)),",
+				"          country = iif(isNull(country) || trim(country) == '' || upper(trim(country)) == 'NULL' || upper(trim(country)) == 'N/A' || trim(country) == '\\\\N', toString(null()), trim(country)),",
+				"          lat = iif(isNull(lat) || trim(lat) == '' || upper(trim(lat)) == 'NULL' || upper(trim(lat)) == 'N/A' || trim(lat) == '\\\\N', toString(null()), trim(lat)),",
+				"          lng = iif(isNull(lng) || trim(lng) == '' || upper(trim(lng)) == 'NULL' || upper(trim(lng)) == 'N/A' || trim(lng) == '\\\\N', toString(null()), trim(lng)),",
+				"          alt = iif(isNull(alt) || trim(alt) == '' || upper(trim(alt)) == 'NULL' || upper(trim(alt)) == 'N/A' || trim(alt) == '\\\\N', toString(null()), trim(alt))) ~> limpiarTodo",
+				"limpiarTodo derive(paisTmp = case(upper(country) == 'USA', 'United States', upper(country) == 'UK', 'United Kingdom', upper(country) == 'UAE', 'United Arab Emirates', upper(country) == 'KOREA', 'South Korea', country)) ~> mapearPais",
+				"mapearPais derive(location = iif((location == lower(location) || location == upper(location)), replace(replace(initCap(lower(replace(location, '-', '~ '))), '~ ', '-'), ' De ', ' de '), location),",
+				"          country = iif((paisTmp == lower(paisTmp) || paisTmp == upper(paisTmp)), replace(initCap(lower(replace(paisTmp, '-', '~ '))), '~ ', '-'), paisTmp)) ~> normalizarTextos",
+				"normalizarTextos derive(circuit_id = toInteger(circuitId),",
+				"          circuit_ref = circuitRef,",
+				"          circuit_name = name,",
+				"          latitude = toDecimal(lat, 9, 6),",
+				"          longitude = toDecimal(lng, 9, 6),",
+				"          altitude_m = toInteger(alt)) ~> convertirTipos",
+				"convertirTipos window(over(circuit_id),",
+				"     asc(circuit_id, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1 && !isNull(circuit_id) && !isNull(circuit_name) && !isNull(location) && !isNull(country)) ~> soloValidos",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          circuit_id as integer,",
+				"          circuit_ref as string,",
+				"          circuit_name as string,",
+				"          location as string,",
+				"          country as string,",
+				"          latitude as decimal(9,6),",
+				"          longitude as decimal(9,6),",
+				"          altitude_m as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          circuit_id,",
+				"          circuit_ref,",
+				"          circuit_name,",
+				"          location,",
+				"          country,",
+				"          latitude,",
+				"          longitude,",
+				"          altitude_m",
+				"     )) ~> silverCircuits"
+			]
+		}
+	}
+}
