@@ -1,0 +1,97 @@
+{
+	"name": "df_silver_constructors",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_constructors_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeConstructors"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_constructors_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverConstructors"
+				}
+			],
+			"transformations": [
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "decodificarHtml"
+				},
+				{
+					"name": "normalizarTextos"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeConstructors",
+				"bronzeConstructors derive(constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+				"          constructorRef = iif(isNull(constructorRef) || trim(constructorRef) == '' || upper(trim(constructorRef)) == 'NULL' || upper(trim(constructorRef)) == 'N/A' || trim(constructorRef) == '\\\\N', toString(null()), trim(constructorRef)),",
+				"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+				"          nationality = iif(isNull(nationality) || trim(nationality) == '' || upper(trim(nationality)) == 'NULL' || upper(trim(nationality)) == 'N/A' || trim(nationality) == '\\\\N', toString(null()), trim(nationality))) ~> limpiarTodo",
+				"limpiarTodo derive(nombreTmp = replace(name, '&amp;', '&')) ~> decodificarHtml",
+				"decodificarHtml derive(constructor_name = iif(nombreTmp == lower(nombreTmp) || (nombreTmp == upper(nombreTmp) && length(nombreTmp) > 5), replace(initCap(lower(replace(nombreTmp, '-', '~ '))), '~ ', '-'), nombreTmp),",
+				"          nationality = case(isNull(nationality), 'Unknown', (nationality == lower(nationality) || nationality == upper(nationality)), replace(initCap(lower(replace(nationality, '-', '~ '))), '~ ', '-'), nationality)) ~> normalizarTextos",
+				"normalizarTextos derive(constructor_id = toInteger(constructorId),",
+				"          constructor_ref = constructorRef) ~> convertirTipos",
+				"convertirTipos window(over(constructor_id),",
+				"     asc(constructor_id, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1 && !isNull(constructor_id) && !isNull(constructor_name)) ~> soloValidos",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          constructor_id as integer,",
+				"          constructor_ref as string,",
+				"          constructor_name as string,",
+				"          nationality as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          constructor_id,",
+				"          constructor_ref,",
+				"          constructor_name,",
+				"          nationality",
+				"     )) ~> silverConstructors"
+			]
+		}
+	}
+}
