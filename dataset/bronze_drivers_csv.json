@@ -24,19 +24,11 @@
 		},
 		"schema": [
 			{
-				"name": "resultId",
-				"type": "String"
-			},
-			{
-				"name": "raceId",
-				"type": "String"
-			},
-			{
 				"name": "driverId",
 				"type": "String"
 			},
 			{
-				"name": "constructorId",
+				"name": "driverRef",
 				"type": "String"
 			},
 			{
@@ -44,55 +36,27 @@
 				"type": "String"
 			},
 			{
-				"name": "grid",
+				"name": "code",
 				"type": "String"
 			},
 			{
-				"name": "position",
+				"name": "forename",
 				"type": "String"
 			},
 			{
-				"name": "positionText",
+				"name": "surname",
 				"type": "String"
 			},
 			{
-				"name": "positionOrder",
+				"name": "dob",
 				"type": "String"
 			},
 			{
-				"name": "points",
+				"name": "nationality",
 				"type": "String"
 			},
 			{
-				"name": "laps",
-				"type": "String"
-			},
-			{
-				"name": "time",
-				"type": "String"
-			},
-			{
-				"name": "milliseconds",
-				"type": "String"
-			},
-			{
-				"name": "fastestLap",
-				"type": "String"
-			},
-			{
-				"name": "rank",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapTime",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapSpeed",
-				"type": "String"
-			},
-			{
-				"name": "statusId",
+				"name": "url",
 				"type": "String"
 			}
 		]

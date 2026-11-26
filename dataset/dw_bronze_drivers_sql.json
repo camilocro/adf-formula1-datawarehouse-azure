@@ -12,19 +12,11 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "resultId",
-				"type": "nvarchar"
-			},
-			{
-				"name": "raceId",
-				"type": "nvarchar"
-			},
-			{
 				"name": "driverId",
 				"type": "nvarchar"
 			},
 			{
-				"name": "constructorId",
+				"name": "driverRef",
 				"type": "nvarchar"
 			},
 			{
@@ -32,55 +24,27 @@
 				"type": "nvarchar"
 			},
 			{
-				"name": "grid",
+				"name": "code",
 				"type": "nvarchar"
 			},
 			{
-				"name": "position",
+				"name": "forename",
 				"type": "nvarchar"
 			},
 			{
-				"name": "positionText",
+				"name": "surname",
 				"type": "nvarchar"
 			},
 			{
-				"name": "positionOrder",
+				"name": "dob",
 				"type": "nvarchar"
 			},
 			{
-				"name": "points",
+				"name": "nationality",
 				"type": "nvarchar"
 			},
 			{
-				"name": "laps",
-				"type": "nvarchar"
-			},
-			{
-				"name": "time",
-				"type": "nvarchar"
-			},
-			{
-				"name": "milliseconds",
-				"type": "nvarchar"
-			},
-			{
-				"name": "fastestLap",
-				"type": "nvarchar"
-			},
-			{
-				"name": "rank",
-				"type": "nvarchar"
-			},
-			{
-				"name": "fastestLapTime",
-				"type": "nvarchar"
-			},
-			{
-				"name": "fastestLapSpeed",
-				"type": "nvarchar"
-			},
-			{
-				"name": "statusId",
+				"name": "url",
 				"type": "nvarchar"
 			}
 		],

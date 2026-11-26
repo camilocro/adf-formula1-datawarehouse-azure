@@ -1,0 +1,66 @@
+{
+	"name": "df_bronze_constructors",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronze_constructors_csv",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeConstructors"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_constructors_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBronzeConstructors"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> bronzeConstructors",
+				"bronzeConstructors sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          constructorId as string,",
+				"          constructorRef as string,",
+				"          name as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          constructorId,",
+				"          constructorRef,",
+				"          name,",
+				"          nationality,",
+				"          url",
+				"     )) ~> sinkBronzeConstructors"
+			]
+		}
+	}
+}

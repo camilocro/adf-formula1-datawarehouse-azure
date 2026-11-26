@@ -1,0 +1,78 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronze_drivers_csv",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeDrivers"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_drivers_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBronzeDrivers"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          driverId as string,",
+				"          driverRef as string,",
+				"          number as string,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> bronzeDrivers",
+				"bronzeDrivers sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          driverId as string,",
+				"          driverRef as string,",
+				"          number as string,",
+				"          code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as string,",
+				"          nationality as string,",
+				"          url as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          driverId,",
+				"          driverRef,",
+				"          number,",
+				"          code,",
+				"          forename,",
+				"          surname,",
+				"          dob,",
+				"          nationality,",
+				"          url",
+				"     )) ~> sinkBronzeDrivers"
+			]
+		}
+	}
+}
