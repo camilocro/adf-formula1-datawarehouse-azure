@@ -1,0 +1,92 @@
+{
+	"name": "dw_bronze_lap_times_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_formula1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bronze/sql"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "resultId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "raceId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "driverId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "constructorId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "number",
+				"type": "nvarchar"
+			},
+			{
+				"name": "grid",
+				"type": "nvarchar"
+			},
+			{
+				"name": "position",
+				"type": "nvarchar"
+			},
+			{
+				"name": "positionText",
+				"type": "nvarchar"
+			},
+			{
+				"name": "positionOrder",
+				"type": "nvarchar"
+			},
+			{
+				"name": "points",
+				"type": "nvarchar"
+			},
+			{
+				"name": "laps",
+				"type": "nvarchar"
+			},
+			{
+				"name": "time",
+				"type": "nvarchar"
+			},
+			{
+				"name": "milliseconds",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fastestLap",
+				"type": "nvarchar"
+			},
+			{
+				"name": "rank",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fastestLapTime",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fastestLapSpeed",
+				"type": "nvarchar"
+			},
+			{
+				"name": "statusId",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "bronze",
+			"table": "lap_times"
+		}
+	}
+}
