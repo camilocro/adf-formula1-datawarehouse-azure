@@ -1,0 +1,78 @@
+{
+	"name": "df_bronze_qualifying",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronze_qualifying_csv",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeQualifying"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_qualifying_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBronzeQualifying"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          qualifyId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          position as string,",
+				"          q1 as string,",
+				"          q2 as string,",
+				"          q3 as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> bronzeQualifying",
+				"bronzeQualifying sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          qualifyId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          position as string,",
+				"          q1 as string,",
+				"          q2 as string,",
+				"          q3 as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          qualifyId,",
+				"          raceId,",
+				"          driverId,",
+				"          constructorId,",
+				"          number,",
+				"          position,",
+				"          q1,",
+				"          q2,",
+				"          q3",
+				"     )) ~> sinkBronzeQualifying"
+			]
+		}
+	}
+}
