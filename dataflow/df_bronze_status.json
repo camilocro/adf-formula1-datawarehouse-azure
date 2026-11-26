@@ -46,7 +46,11 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sinkBronzeStatus"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          statusId,",
+				"          status",
+				"     )) ~> sinkBronzeStatus"
 			]
 		}
 	}
