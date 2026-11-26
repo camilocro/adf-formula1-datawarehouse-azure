@@ -24,10 +24,6 @@
 		},
 		"schema": [
 			{
-				"name": "resultId",
-				"type": "String"
-			},
-			{
 				"name": "raceId",
 				"type": "String"
 			},
@@ -36,35 +32,11 @@
 				"type": "String"
 			},
 			{
-				"name": "constructorId",
-				"type": "String"
-			},
-			{
-				"name": "number",
-				"type": "String"
-			},
-			{
-				"name": "grid",
+				"name": "lap",
 				"type": "String"
 			},
 			{
 				"name": "position",
-				"type": "String"
-			},
-			{
-				"name": "positionText",
-				"type": "String"
-			},
-			{
-				"name": "positionOrder",
-				"type": "String"
-			},
-			{
-				"name": "points",
-				"type": "String"
-			},
-			{
-				"name": "laps",
 				"type": "String"
 			},
 			{
@@ -73,26 +45,6 @@
 			},
 			{
 				"name": "milliseconds",
-				"type": "String"
-			},
-			{
-				"name": "fastestLap",
-				"type": "String"
-			},
-			{
-				"name": "rank",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapTime",
-				"type": "String"
-			},
-			{
-				"name": "fastestLapSpeed",
-				"type": "String"
-			},
-			{
-				"name": "statusId",
 				"type": "String"
 			}
 		]

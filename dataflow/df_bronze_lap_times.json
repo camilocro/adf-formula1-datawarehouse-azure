@@ -1,0 +1,69 @@
+{
+	"name": "df_bronze_lap_times",
+	"properties": {
+		"folder": {
+			"name": "bronze"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "bronze_lap_times_csv",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeLapTimes"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_lap_times_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkBronzeLapTimes"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          lap as string,",
+				"          position as string,",
+				"          time as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> bronzeLapTimes",
+				"bronzeLapTimes sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          lap as string,",
+				"          position as string,",
+				"          time as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raceId,",
+				"          driverId,",
+				"          lap,",
+				"          position,",
+				"          time,",
+				"          milliseconds",
+				"     )) ~> sinkBronzeLapTimes"
+			]
+		}
+	}
+}
