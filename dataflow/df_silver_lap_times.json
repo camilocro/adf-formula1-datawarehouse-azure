@@ -1,0 +1,225 @@
+{
+	"name": "df_silver_lap_times",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_lap_times_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeLapTimes"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_races_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveRaces"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_drivers_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveDrivers"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_quarantine_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "cuarentena"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_lap_times_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverLapTimes"
+				}
+			],
+			"transformations": [
+				{
+					"name": "seleccionarCarrera"
+				},
+				{
+					"name": "seleccionarPiloto"
+				},
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "buscarCarrera"
+				},
+				{
+					"name": "buscarPiloto"
+				},
+				{
+					"name": "evaluarRechazo"
+				},
+				{
+					"name": "dividirRechazos"
+				},
+				{
+					"name": "prepararCuarentena"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          lap as string,",
+				"          position as string,",
+				"          time as string,",
+				"          milliseconds as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeLapTimes",
+				"source(output(",
+				"          race_id as integer,",
+				"          season_year as integer,",
+				"          round_number as integer,",
+				"          circuit_id as integer,",
+				"          race_name as string,",
+				"          race_date as date,",
+				"          race_time_utc as string,",
+				"          sprint_date as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveRaces",
+				"source(output(",
+				"          driver_id as integer,",
+				"          driver_ref as string,",
+				"          permanent_number as integer,",
+				"          driver_code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as date,",
+				"          nationality as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveDrivers",
+				"claveRaces select(mapColumn(",
+				"          chk_race = race_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+				"claveDrivers select(mapColumn(",
+				"          chk_driver = driver_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+				"bronzeLapTimes derive(raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+				"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+				"          lap = iif(isNull(lap) || trim(lap) == '' || upper(trim(lap)) == 'NULL' || upper(trim(lap)) == 'N/A' || trim(lap) == '\\\\N', toString(null()), trim(lap)),",
+				"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position)),",
+				"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds))) ~> limpiarTodo",
+				"limpiarTodo derive(race_id = toInteger(raceId),",
+				"          driver_id = toInteger(driverId),",
+				"          lap_number = toInteger(lap),",
+				"          lap_position = toInteger(position),",
+				"          lap_time_ms = toInteger(milliseconds)) ~> convertirTipos",
+				"convertirTipos, seleccionarCarrera lookup(race_id == chk_race,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarCarrera",
+				"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarPiloto",
+				"buscarPiloto derive(motivo = case(isNull(race_id) || isNull(driver_id) || isNull(lap_number) || isNull(lap_position) || isNull(lap_time_ms), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', lap_time_ms <= 0, 'Tiempo de vuelta no positivo', 'OK')) ~> evaluarRechazo",
+				"evaluarRechazo split(motivo != 'OK',",
+				"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+				"dividirRechazos@rechazados derive(raw_result_id = concat(raceId, '-', driverId, '-', lap),",
+				"          raw_race_id = raceId,",
+				"          raw_driver_id = driverId,",
+				"          raw_constructor_id = toString(null()),",
+				"          raw_points = toString(null()),",
+				"          quarantine_reason = motivo,",
+				"          {_source_file} = 'lap_times.csv') ~> prepararCuarentena",
+				"dividirRechazos@validos window(over(race_id,",
+				"          driver_id,",
+				"          lap_number),",
+				"     asc(lap_time_ms, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+				"prepararCuarentena sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          quarantine_id as long,",
+				"          raw_result_id as string,",
+				"          raw_race_id as string,",
+				"          raw_driver_id as string,",
+				"          raw_constructor_id as string,",
+				"          raw_points as string,",
+				"          quarantine_reason as string,",
+				"          {_source_file} as string,",
+				"          {_rejected_at} as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raw_result_id,",
+				"          raw_race_id,",
+				"          raw_driver_id,",
+				"          raw_constructor_id,",
+				"          raw_points,",
+				"          quarantine_reason,",
+				"          {_source_file}",
+				"     )) ~> cuarentena",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          race_id as integer,",
+				"          driver_id as integer,",
+				"          lap_number as integer,",
+				"          lap_position as integer,",
+				"          lap_time_ms as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          race_id,",
+				"          driver_id,",
+				"          lap_number,",
+				"          lap_position,",
+				"          lap_time_ms",
+				"     )) ~> silverLapTimes"
+			]
+		}
+	}
+}
