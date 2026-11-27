@@ -1,0 +1,113 @@
+{
+	"name": "df_silver_races",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_races_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeRaces"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_circuits_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveCircuits"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "seleccionarClave"
+				},
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "normalizarNombre"
+				},
+				{
+					"name": "convertirFechas"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "buscarCircuito"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          raceId as string,",
+				"          year as string,",
+				"          round as string,",
+				"          circuitId as string,",
+				"          name as string,",
+				"          date as string,",
+				"          time as string,",
+				"          url as string,",
+				"          fp1_date as string,",
+				"          fp1_time as string,",
+				"          fp2_date as string,",
+				"          fp2_time as string,",
+				"          fp3_date as string,",
+				"          fp3_time as string,",
+				"          quali_date as string,",
+				"          quali_time as string,",
+				"          sprint_date as string,",
+				"          sprint_time as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeRaces",
+				"source(output(",
+				"          circuit_id as integer,",
+				"          circuit_ref as string,",
+				"          circuit_name as string,",
+				"          location as string,",
+				"          country as string,",
+				"          latitude as decimal(9,6),",
+				"          longitude as decimal(9,6),",
+				"          altitude_m as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveCircuits",
+				"claveCircuits select(mapColumn(",
+				"          chk_circuit = circuit_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarClave",
+				"bronzeRaces derive(raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+				"          year = iif(isNull(year) || trim(year) == '' || upper(trim(year)) == 'NULL' || upper(trim(year)) == 'N/A' || trim(year) == '\\\\N', toString(null()), trim(year)),",
+				"          round = iif(isNull(round) || trim(round) == '' || upper(trim(round)) == 'NULL' || upper(trim(round)) == 'N/A' || trim(round) == '\\\\N', toString(null()), trim(round)),",
+				"          circuitId = iif(isNull(circuitId) || trim(circuitId) == '' || upper(trim(circuitId)) == 'NULL' || upper(trim(circuitId)) == 'N/A' || trim(circuitId) == '\\\\N', toString(null()), trim(circuitId)),",
+				"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+				"          date = iif(isNull(date) || trim(date) == '' || upper(trim(date)) == 'NULL' || upper(trim(date)) == 'N/A' || trim(date) == '\\\\N', toString(null()), trim(date)),",
+				"          time = iif(isNull(time) || trim(time) == '' || upper(trim(time)) == 'NULL' || upper(trim(time)) == 'N/A' || trim(time) == '\\\\N', toString(null()), trim(time)),",
+				"          sprint_date = iif(isNull(sprint_date) || trim(sprint_date) == '' || upper(trim(sprint_date)) == 'NULL' || upper(trim(sprint_date)) == 'N/A' || trim(sprint_date) == '\\\\N', toString(null()), trim(sprint_date))) ~> limpiarTodo",
+				"limpiarTodo derive(race_name = iif((name == lower(name) || name == upper(name)), replace(initCap(lower(replace(name, '-', '~ '))), '~ ', '-'), name)) ~> normalizarNombre",
+				"normalizarNombre derive(race_date = case(regexMatch(date, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'), toDate(date, 'yyyy-MM-dd'), regexMatch(date, '^[0-9]{2}/[0-9]{2}/[0-9]{4}$'), toDate(date, 'dd/MM/yyyy'), regexMatch(date, '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'), toDate(date, 'MM-dd-yyyy'), regexMatch(date, '^[0-9]{4}/[0-9]{2}/[0-9]{2}$'), toDate(date, 'yyyy/MM/dd'), regexMatch(date, '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}$'), toDate(date, 'dd-MMM-yyyy')),",
+				"          sprint_date = case(regexMatch(sprint_date, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'), toDate(sprint_date, 'yyyy-MM-dd'), regexMatch(sprint_date, '^[0-9]{2}/[0-9]{2}/[0-9]{4}$'), toDate(sprint_date, 'dd/MM/yyyy'), regexMatch(sprint_date, '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'), toDate(sprint_date, 'MM-dd-yyyy'), regexMatch(sprint_date, '^[0-9]{4}/[0-9]{2}/[0-9]{2}$'), toDate(sprint_date, 'yyyy/MM/dd'), regexMatch(sprint_date, '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}$'), toDate(sprint_date, 'dd-MMM-yyyy'))) ~> convertirFechas",
+				"convertirFechas derive(race_id = toInteger(raceId),",
+				"          season_year = toInteger(year),",
+				"          round_number = toInteger(round),",
+				"          circuit_id = toInteger(circuitId),",
+				"          race_time_utc = iif(regexMatch(time, '^[0-9]{2}:[0-9]{2}:[0-9]{2}$'), time, toString(null()))) ~> convertirTipos",
+				"convertirTipos, seleccionarClave lookup(circuit_id == chk_circuit,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarCircuito"
+			]
+		}
+	}
+}
