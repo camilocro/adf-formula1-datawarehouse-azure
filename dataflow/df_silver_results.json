@@ -1,0 +1,224 @@
+{
+	"name": "df_silver_results",
+	"properties": {
+		"folder": {
+			"name": "silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dw_bronze_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "bronzeResults"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_races_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveRaces"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_drivers_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveDrivers"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_constructors_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveConstructors"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_status_sql",
+						"type": "DatasetReference"
+					},
+					"name": "claveStatus"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "seleccionarCarrera"
+				},
+				{
+					"name": "seleccionarPiloto"
+				},
+				{
+					"name": "seleccionarConstructor"
+				},
+				{
+					"name": "seleccionarEstado"
+				},
+				{
+					"name": "limpiarTodo"
+				},
+				{
+					"name": "convertirTipos"
+				},
+				{
+					"name": "convertirTiempos"
+				},
+				{
+					"name": "buscarCarrera"
+				},
+				{
+					"name": "buscarPiloto"
+				},
+				{
+					"name": "buscarConstructor"
+				},
+				{
+					"name": "buscarEstado"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          resultId as string,",
+				"          raceId as string,",
+				"          driverId as string,",
+				"          constructorId as string,",
+				"          number as string,",
+				"          grid as string,",
+				"          position as string,",
+				"          positionText as string,",
+				"          positionOrder as string,",
+				"          points as string,",
+				"          laps as string,",
+				"          time as string,",
+				"          milliseconds as string,",
+				"          fastestLap as string,",
+				"          rank as string,",
+				"          fastestLapTime as string,",
+				"          fastestLapSpeed as string,",
+				"          statusId as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> bronzeResults",
+				"source(output(",
+				"          race_id as integer,",
+				"          season_year as integer,",
+				"          round_number as integer,",
+				"          circuit_id as integer,",
+				"          race_name as string,",
+				"          race_date as date,",
+				"          race_time_utc as string,",
+				"          sprint_date as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveRaces",
+				"source(output(",
+				"          driver_id as integer,",
+				"          driver_ref as string,",
+				"          permanent_number as integer,",
+				"          driver_code as string,",
+				"          forename as string,",
+				"          surname as string,",
+				"          dob as date,",
+				"          nationality as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveDrivers",
+				"source(output(",
+				"          constructor_id as integer,",
+				"          constructor_ref as string,",
+				"          constructor_name as string,",
+				"          nationality as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveConstructors",
+				"source(output(",
+				"          status_id as integer,",
+				"          status_description as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> claveStatus",
+				"claveRaces select(mapColumn(",
+				"          chk_race = race_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+				"claveDrivers select(mapColumn(",
+				"          chk_driver = driver_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+				"claveConstructors select(mapColumn(",
+				"          chk_constructor = constructor_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarConstructor",
+				"claveStatus select(mapColumn(",
+				"          status_id",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> seleccionarEstado",
+				"bronzeResults derive(resultId = iif(isNull(resultId) || trim(resultId) == '' || upper(trim(resultId)) == 'NULL' || upper(trim(resultId)) == 'N/A' || trim(resultId) == '\\\\N', toString(null()), trim(resultId)),",
+				"          raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+				"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+				"          constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+				"          number = iif(isNull(number) || trim(number) == '' || upper(trim(number)) == 'NULL' || upper(trim(number)) == 'N/A' || trim(number) == '\\\\N', toString(null()), trim(number)),",
+				"          grid = iif(isNull(grid) || trim(grid) == '' || upper(trim(grid)) == 'NULL' || upper(trim(grid)) == 'N/A' || trim(grid) == '\\\\N', toString(null()), trim(grid)),",
+				"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position)),",
+				"          positionOrder = iif(isNull(positionOrder) || trim(positionOrder) == '' || upper(trim(positionOrder)) == 'NULL' || upper(trim(positionOrder)) == 'N/A' || trim(positionOrder) == '\\\\N', toString(null()), trim(positionOrder)),",
+				"          points = iif(isNull(points) || trim(points) == '' || upper(trim(points)) == 'NULL' || upper(trim(points)) == 'N/A' || trim(points) == '\\\\N', toString(null()), trim(points)),",
+				"          laps = iif(isNull(laps) || trim(laps) == '' || upper(trim(laps)) == 'NULL' || upper(trim(laps)) == 'N/A' || trim(laps) == '\\\\N', toString(null()), trim(laps)),",
+				"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds)),",
+				"          fastestLap = iif(isNull(fastestLap) || trim(fastestLap) == '' || upper(trim(fastestLap)) == 'NULL' || upper(trim(fastestLap)) == 'N/A' || trim(fastestLap) == '\\\\N', toString(null()), trim(fastestLap)),",
+				"          rank = iif(isNull(rank) || trim(rank) == '' || upper(trim(rank)) == 'NULL' || upper(trim(rank)) == 'N/A' || trim(rank) == '\\\\N', toString(null()), trim(rank)),",
+				"          fastestLapTime = iif(isNull(fastestLapTime) || trim(fastestLapTime) == '' || upper(trim(fastestLapTime)) == 'NULL' || upper(trim(fastestLapTime)) == 'N/A' || trim(fastestLapTime) == '\\\\N', toString(null()), trim(fastestLapTime)),",
+				"          fastestLapSpeed = iif(isNull(fastestLapSpeed) || trim(fastestLapSpeed) == '' || upper(trim(fastestLapSpeed)) == 'NULL' || upper(trim(fastestLapSpeed)) == 'N/A' || trim(fastestLapSpeed) == '\\\\N', toString(null()), trim(fastestLapSpeed)),",
+				"          statusId = iif(isNull(statusId) || trim(statusId) == '' || upper(trim(statusId)) == 'NULL' || upper(trim(statusId)) == 'N/A' || trim(statusId) == '\\\\N', toString(null()), trim(statusId))) ~> limpiarTodo",
+				"limpiarTodo derive(result_id = toInteger(resultId),",
+				"          race_id = toInteger(raceId),",
+				"          driver_id = toInteger(driverId),",
+				"          constructor_id = toInteger(constructorId),",
+				"          status_id = toInteger(statusId),",
+				"          car_number = toInteger(number),",
+				"          grid_position = toInteger(grid),",
+				"          final_position = toInteger(position),",
+				"          position_order = toInteger(positionOrder),",
+				"          points_num = toDecimal(points, 6, 2),",
+				"          laps_completed = toInteger(laps),",
+				"          race_time_ms = toLong(milliseconds),",
+				"          fastest_lap_number = toInteger(fastestLap),",
+				"          fastest_lap_rank = toInteger(rank),",
+				"          fastest_lap_speed_kph = toDecimal(fastestLapSpeed, 6, 3)) ~> convertirTipos",
+				"convertirTipos derive(fastest_lap_ms = iif(regexMatch(fastestLapTime, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(fastestLapTime, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(fastestLapTime, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(fastestLapTime, '^.*[.]', '')), toInteger(null()))) ~> convertirTiempos",
+				"convertirTiempos, seleccionarCarrera lookup(race_id == chk_race,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarCarrera",
+				"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarPiloto",
+				"buscarPiloto, seleccionarConstructor lookup(constructor_id == chk_constructor,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarConstructor",
+				"buscarConstructor, seleccionarEstado lookup(convertirTipos@status_id == seleccionarEstado@status_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> buscarEstado"
+			]
+		}
+	}
+}
