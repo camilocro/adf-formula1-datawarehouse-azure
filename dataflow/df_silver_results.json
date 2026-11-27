@@ -43,7 +43,22 @@
 					"name": "claveStatus"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverResults"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_quarantine_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "cuarentena"
+				}
+			],
 			"transformations": [
 				{
 					"name": "seleccionarCarrera"
@@ -246,7 +261,83 @@
 				"          raw_constructor_id = constructorId,",
 				"          raw_points = points,",
 				"          quarantine_reason = motivo,",
-				"          {_source_file} = 'results.csv') ~> prepararCuarentena"
+				"          {_source_file} = 'results.csv') ~> prepararCuarentena",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          result_id as integer,",
+				"          race_id as integer,",
+				"          driver_id as integer,",
+				"          constructor_id as integer,",
+				"          status_id as integer,",
+				"          car_number as integer,",
+				"          grid_position as integer,",
+				"          final_position as integer,",
+				"          position_order as integer,",
+				"          points as decimal(6,2),",
+				"          laps_completed as integer,",
+				"          race_time_ms as long,",
+				"          fastest_lap_number as integer,",
+				"          fastest_lap_rank as integer,",
+				"          fastest_lap_ms as integer,",
+				"          fastest_lap_speed_kph as decimal(6,3)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          result_id,",
+				"          race_id,",
+				"          driver_id,",
+				"          constructor_id,",
+				"          status_id,",
+				"          car_number,",
+				"          grid_position,",
+				"          final_position,",
+				"          position_order,",
+				"          points = points_num,",
+				"          laps_completed,",
+				"          race_time_ms,",
+				"          fastest_lap_number,",
+				"          fastest_lap_rank,",
+				"          fastest_lap_ms,",
+				"          fastest_lap_speed_kph",
+				"     )) ~> silverResults",
+				"prepararCuarentena sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          quarantine_id as long,",
+				"          raw_result_id as string,",
+				"          raw_race_id as string,",
+				"          raw_driver_id as string,",
+				"          raw_constructor_id as string,",
+				"          raw_points as string,",
+				"          quarantine_reason as string,",
+				"          {_source_file} as string,",
+				"          {_rejected_at} as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raw_result_id,",
+				"          raw_race_id,",
+				"          raw_driver_id,",
+				"          raw_constructor_id,",
+				"          raw_points,",
+				"          quarantine_reason,",
+				"          {_source_file}",
+				"     )) ~> cuarentena"
 			]
 		}
 	}
