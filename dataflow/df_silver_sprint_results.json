@@ -318,7 +318,16 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> cuarentena"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raw_result_id,",
+				"          raw_race_id,",
+				"          raw_driver_id,",
+				"          raw_constructor_id,",
+				"          raw_points,",
+				"          quarantine_reason,",
+				"          {_source_file}",
+				"     )) ~> cuarentena"
 			]
 		}
 	}
