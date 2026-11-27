@@ -22,7 +22,22 @@
 					"name": "claveCircuits"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dw_silver_races_sql",
+						"type": "DatasetReference"
+					},
+					"name": "silverRaces"
+				},
+				{
+					"dataset": {
+						"referenceName": "dw_silver_quarantine_results_sql",
+						"type": "DatasetReference"
+					},
+					"name": "cuarentena"
+				}
+			],
 			"transformations": [
 				{
 					"name": "seleccionarClave"
@@ -44,6 +59,18 @@
 				},
 				{
 					"name": "evaluarRechazo"
+				},
+				{
+					"name": "dividirRechazos"
+				},
+				{
+					"name": "prepararCuarentena"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
 				}
 			],
 			"scriptLines": [
@@ -110,7 +137,80 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> buscarCircuito",
-				"buscarCircuito derive(motivo = case(isNull(race_id) || isNull(season_year) || isNull(round_number) || isNull(circuit_id) || isNull(race_date) || isNull(race_name), 'Formato inválido o campo obligatorio vacío', isNull(chk_circuit), 'Llave foránea inexistente: circuit_id', 'OK')) ~> evaluarRechazo"
+				"buscarCircuito derive(motivo = case(isNull(race_id) || isNull(season_year) || isNull(round_number) || isNull(circuit_id) || isNull(race_date) || isNull(race_name), 'Formato inválido o campo obligatorio vacío', isNull(chk_circuit), 'Llave foránea inexistente: circuit_id', 'OK')) ~> evaluarRechazo",
+				"evaluarRechazo split(motivo != 'OK',",
+				"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+				"dividirRechazos@rechazados derive(raw_result_id = raceId,",
+				"          raw_race_id = raceId,",
+				"          raw_driver_id = toString(null()),",
+				"          raw_constructor_id = toString(null()),",
+				"          raw_points = toString(null()),",
+				"          quarantine_reason = motivo,",
+				"          {_source_file} = 'races.csv') ~> prepararCuarentena",
+				"dividirRechazos@validos window(over(race_id),",
+				"     asc(race_id, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+				"soloValidos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          race_id as integer,",
+				"          season_year as integer,",
+				"          round_number as integer,",
+				"          circuit_id as integer,",
+				"          race_name as string,",
+				"          race_date as date,",
+				"          race_time_utc as string,",
+				"          sprint_date as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          race_id,",
+				"          season_year,",
+				"          round_number,",
+				"          circuit_id,",
+				"          race_name,",
+				"          race_date,",
+				"          race_time_utc,",
+				"          sprint_date",
+				"     )) ~> silverRaces",
+				"prepararCuarentena sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          quarantine_id as long,",
+				"          raw_result_id as string,",
+				"          raw_race_id as string,",
+				"          raw_driver_id as string,",
+				"          raw_constructor_id as string,",
+				"          raw_points as string,",
+				"          quarantine_reason as string,",
+				"          {_source_file} as string,",
+				"          {_rejected_at} as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          raw_result_id,",
+				"          raw_race_id,",
+				"          raw_driver_id,",
+				"          raw_constructor_id,",
+				"          raw_points,",
+				"          quarantine_reason,",
+				"          {_source_file}",
+				"     )) ~> cuarentena"
 			]
 		}
 	}
