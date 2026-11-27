@@ -41,6 +41,9 @@
 				},
 				{
 					"name": "buscarCircuito"
+				},
+				{
+					"name": "evaluarRechazo"
 				}
 			],
 			"scriptLines": [
@@ -106,7 +109,8 @@
 				"convertirTipos, seleccionarClave lookup(circuit_id == chk_circuit,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> buscarCircuito"
+				"     broadcast: 'auto')~> buscarCircuito",
+				"buscarCircuito derive(motivo = case(isNull(race_id) || isNull(season_year) || isNull(round_number) || isNull(circuit_id) || isNull(race_date) || isNull(race_name), 'Formato inválido o campo obligatorio vacío', isNull(chk_circuit), 'Llave foránea inexistente: circuit_id', 'OK')) ~> evaluarRechazo"
 			]
 		}
 	}
