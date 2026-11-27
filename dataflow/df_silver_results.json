@@ -77,6 +77,21 @@
 				},
 				{
 					"name": "buscarEstado"
+				},
+				{
+					"name": "evaluarRechazo"
+				},
+				{
+					"name": "dividirRechazos"
+				},
+				{
+					"name": "quitarDuplicados"
+				},
+				{
+					"name": "soloValidos"
+				},
+				{
+					"name": "prepararCuarentena"
 				}
 			],
 			"scriptLines": [
@@ -166,7 +181,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> seleccionarConstructor",
 				"claveStatus select(mapColumn(",
-				"          status_id",
+				"          chk_status = status_id",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> seleccionarEstado",
@@ -214,10 +229,24 @@
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> buscarConstructor",
-				"buscarConstructor, seleccionarEstado lookup(convertirTipos@status_id == seleccionarEstado@status_id,",
+				"buscarConstructor, seleccionarEstado lookup(status_id == chk_status,",
 				"     multiple: false,",
 				"     pickup: 'any',",
-				"     broadcast: 'auto')~> buscarEstado"
+				"     broadcast: 'auto')~> buscarEstado",
+				"buscarEstado derive(motivo = case(isNull(result_id) || isNull(race_id) || isNull(driver_id) || isNull(constructor_id) || isNull(status_id) || isNull(grid_position) || isNull(position_order) || isNull(points_num) || isNull(laps_completed), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', isNull(chk_constructor), 'Llave foránea inexistente: constructor_id', isNull(chk_status), 'Llave foránea inexistente: status_id', startsWith(points, '-'), 'Puntos negativos (CHECK points >= 0)', 'OK')) ~> evaluarRechazo",
+				"evaluarRechazo split(motivo != 'OK',",
+				"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+				"dividirRechazos@validos window(over(result_id),",
+				"     asc(result_id, true),",
+				"     NumFila = rowNumber()) ~> quitarDuplicados",
+				"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+				"dividirRechazos@rechazados derive(raw_result_id = resultId,",
+				"          raw_race_id = raceId,",
+				"          raw_driver_id = driverId,",
+				"          raw_constructor_id = constructorId,",
+				"          raw_points = points,",
+				"          quarantine_reason = motivo,",
+				"          {_source_file} = 'results.csv') ~> prepararCuarentena"
 			]
 		}
 	}
