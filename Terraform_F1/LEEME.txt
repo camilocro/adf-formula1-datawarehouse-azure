@@ -1,0 +1,42 @@
+PROYECTO TERRAFORM - Campeonato del Mundo de Formula 1 (1950-2024)
+Sufijo de los nombres de recursos: 65743264
+
+QUE CONTIENE
+  main.tf               Proveedor azurerm, grupo de recursos, Data Lake Gen2 (contenedores raw y
+                        gold-export), subida de los 14 CSV a raw/datos_csv, servidor SQL con sus reglas
+                        de firewall, base dw_formula_1 (GP_S_Gen5_1), carga de los scripts SQL con
+                        sqlcmd y Data Factory en eastus.
+  sql\01_bronze.sql     Esquema bronze: 10 tablas, todo como texto (Data Factory las carga despues).
+  sql\02_silver.sql     Esquema silver: 10 tablas tipadas con llaves primarias y foraneas.
+  sql\03_cuarentena.sql silver.quarantine_results (rechazos de calidad, estructura del docente).
+  sql\04_gold.sql       Esquema gold: 6 dimensiones, 5 hechos, indices y miembro Unknown (SK -1).
+  datos_csv\            Los 14 CSV del dataset. Todos se suben a RAW; a Bronze solo se cargan los 10
+                        necesarios. seasons, constructor_results, constructor_standings y
+                        driver_standings quedan en RAW y no se cargan (ver el informe).
+  .gitignore            Evita subir el estado de Terraform al repositorio.
+
+DONDE PEGAR CADA CREDENCIAL (main.tf, bloque provider "azurerm")
+  [SUBSCRIPTION_ID]  ->  Id. de suscripcion (Suscripciones > Azure for Students)
+  [CLIENT_ID]        ->  Id. de aplicacion (cliente) de terraform-f1-65743264
+  [CLIENT_SECRET]    ->  Valor del secreto de cliente (no el Id. del secreto)
+  [TENANT_ID]        ->  Id. de inquilino (Microsoft Entra ID > Informacion general)
+  En VS Code: Ctrl+H, escribir el marcador con los corchetes, pegar el valor y "Reemplazar todo".
+  El secreto solo va en tu archivo local. Antes de subir main.tf a GitHub, vuelve a dejar
+  [CLIENT_SECRET] como marcador.
+
+REQUISITOS
+  Terraform 1.5 o superior, sqlcmd (en el PATH o en C:\Program Files\SqlCmd) y Windows PowerShell.
+
+COMANDOS (en PowerShell, dentro de esta carpeta, en este orden)
+  terraform fmt
+  terraform init
+  terraform validate
+  terraform plan                      (debe resumir 24 recursos nuevos)
+  terraform apply                     (escribir yes para confirmar)
+  terraform apply -auto-approve       (alternativa: aplica sin preguntar)
+  terraform state list                (lista los 24 recursos creados)
+
+NOTAS
+  - Los scripts SQL eliminan y recrean las tablas de bronze y silver. Para volver a cargarlas, cambia
+    dw_seed_version en locals y ejecuta terraform apply de nuevo.
+  - Para borrar todo al terminar el curso: terraform destroy.
