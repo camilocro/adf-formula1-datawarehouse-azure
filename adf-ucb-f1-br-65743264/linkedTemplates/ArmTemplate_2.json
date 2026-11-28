@@ -1,0 +1,3206 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "adf-ucb-f1-br-65743264"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_results')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_results_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeResults"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeResults"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          rank as string,",
+						"          fastestLapTime as string,",
+						"          fastestLapSpeed as string,",
+						"          statusId as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeResults",
+						"bronzeResults sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          rank as string,",
+						"          fastestLapTime as string,",
+						"          fastestLapSpeed as string,",
+						"          statusId as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          resultId,",
+						"          raceId,",
+						"          driverId,",
+						"          constructorId,",
+						"          number,",
+						"          grid,",
+						"          position,",
+						"          positionText,",
+						"          positionOrder,",
+						"          points,",
+						"          laps,",
+						"          time,",
+						"          milliseconds,",
+						"          fastestLap,",
+						"          rank,",
+						"          fastestLapTime,",
+						"          fastestLapSpeed,",
+						"          statusId",
+						"     )) ~> sinkBronzeResults"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_sprint_results')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_sprint_results_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeSprint"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_sprint_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeSprint"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          fastestLapTime as string,",
+						"          statusId as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeSprint",
+						"bronzeSprint sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          fastestLapTime as string,",
+						"          statusId as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          resultId,",
+						"          raceId,",
+						"          driverId,",
+						"          constructorId,",
+						"          number,",
+						"          grid,",
+						"          position,",
+						"          positionText,",
+						"          positionOrder,",
+						"          points,",
+						"          laps,",
+						"          time,",
+						"          milliseconds,",
+						"          fastestLap,",
+						"          fastestLapTime,",
+						"          statusId",
+						"     )) ~> sinkBronzeSprint"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_status')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_status_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_status_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeStatus"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          statusId as string,",
+						"          status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeStatus",
+						"bronzeStatus sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          statusId as string,",
+						"          status as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          statusId,",
+						"          status",
+						"     )) ~> sinkBronzeStatus"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_circuits')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_circuits_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeCircuits"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_circuits_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverCircuits"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "mapearPais"
+						},
+						{
+							"name": "normalizarTextos"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          circuitId as string,",
+						"          circuitRef as string,",
+						"          name as string,",
+						"          location as string,",
+						"          country as string,",
+						"          lat as string,",
+						"          lng as string,",
+						"          alt as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeCircuits",
+						"bronzeCircuits derive(circuitId = iif(isNull(circuitId) || trim(circuitId) == '' || upper(trim(circuitId)) == 'NULL' || upper(trim(circuitId)) == 'N/A' || trim(circuitId) == '\\\\N', toString(null()), trim(circuitId)),",
+						"          circuitRef = iif(isNull(circuitRef) || trim(circuitRef) == '' || upper(trim(circuitRef)) == 'NULL' || upper(trim(circuitRef)) == 'N/A' || trim(circuitRef) == '\\\\N', toString(null()), trim(circuitRef)),",
+						"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+						"          location = iif(isNull(location) || trim(location) == '' || upper(trim(location)) == 'NULL' || upper(trim(location)) == 'N/A' || trim(location) == '\\\\N', toString(null()), trim(location)),",
+						"          country = iif(isNull(country) || trim(country) == '' || upper(trim(country)) == 'NULL' || upper(trim(country)) == 'N/A' || trim(country) == '\\\\N', toString(null()), trim(country)),",
+						"          lat = iif(isNull(lat) || trim(lat) == '' || upper(trim(lat)) == 'NULL' || upper(trim(lat)) == 'N/A' || trim(lat) == '\\\\N', toString(null()), trim(lat)),",
+						"          lng = iif(isNull(lng) || trim(lng) == '' || upper(trim(lng)) == 'NULL' || upper(trim(lng)) == 'N/A' || trim(lng) == '\\\\N', toString(null()), trim(lng)),",
+						"          alt = iif(isNull(alt) || trim(alt) == '' || upper(trim(alt)) == 'NULL' || upper(trim(alt)) == 'N/A' || trim(alt) == '\\\\N', toString(null()), trim(alt))) ~> limpiarTodo",
+						"limpiarTodo derive(paisTmp = case(upper(country) == 'USA', 'United States', upper(country) == 'UK', 'United Kingdom', upper(country) == 'UAE', 'United Arab Emirates', upper(country) == 'KOREA', 'South Korea', country)) ~> mapearPais",
+						"mapearPais derive(location = iif((location == lower(location) || location == upper(location)), replace(replace(initCap(lower(replace(location, '-', '~ '))), '~ ', '-'), ' De ', ' de '), location),",
+						"          country = iif((paisTmp == lower(paisTmp) || paisTmp == upper(paisTmp)), replace(initCap(lower(replace(paisTmp, '-', '~ '))), '~ ', '-'), paisTmp)) ~> normalizarTextos",
+						"normalizarTextos derive(circuit_id = toInteger(circuitId),",
+						"          circuit_ref = circuitRef,",
+						"          circuit_name = name,",
+						"          latitude = toDecimal(lat, 9, 6),",
+						"          longitude = toDecimal(lng, 9, 6),",
+						"          altitude_m = toInteger(alt)) ~> convertirTipos",
+						"convertirTipos window(over(circuit_id),",
+						"     asc(circuit_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1 && !isNull(circuit_id) && !isNull(circuit_name) && !isNull(location) && !isNull(country)) ~> soloValidos",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          circuit_id as integer,",
+						"          circuit_ref as string,",
+						"          circuit_name as string,",
+						"          location as string,",
+						"          country as string,",
+						"          latitude as decimal(9,6),",
+						"          longitude as decimal(9,6),",
+						"          altitude_m as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          circuit_id,",
+						"          circuit_ref,",
+						"          circuit_name,",
+						"          location,",
+						"          country,",
+						"          latitude,",
+						"          longitude,",
+						"          altitude_m",
+						"     )) ~> silverCircuits"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_constructors')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeConstructors"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverConstructors"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "decodificarHtml"
+						},
+						{
+							"name": "normalizarTextos"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          constructorId as string,",
+						"          constructorRef as string,",
+						"          name as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeConstructors",
+						"bronzeConstructors derive(constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+						"          constructorRef = iif(isNull(constructorRef) || trim(constructorRef) == '' || upper(trim(constructorRef)) == 'NULL' || upper(trim(constructorRef)) == 'N/A' || trim(constructorRef) == '\\\\N', toString(null()), trim(constructorRef)),",
+						"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+						"          nationality = iif(isNull(nationality) || trim(nationality) == '' || upper(trim(nationality)) == 'NULL' || upper(trim(nationality)) == 'N/A' || trim(nationality) == '\\\\N', toString(null()), trim(nationality))) ~> limpiarTodo",
+						"limpiarTodo derive(nombreTmp = replace(name, '&amp;', '&')) ~> decodificarHtml",
+						"decodificarHtml derive(constructor_name = iif(nombreTmp == lower(nombreTmp) || (nombreTmp == upper(nombreTmp) && length(nombreTmp) > 5), replace(initCap(lower(replace(nombreTmp, '-', '~ '))), '~ ', '-'), nombreTmp),",
+						"          nationality = case(isNull(nationality), 'Unknown', (nationality == lower(nationality) || nationality == upper(nationality)), replace(initCap(lower(replace(nationality, '-', '~ '))), '~ ', '-'), nationality)) ~> normalizarTextos",
+						"normalizarTextos derive(constructor_id = toInteger(constructorId),",
+						"          constructor_ref = constructorRef) ~> convertirTipos",
+						"convertirTipos window(over(constructor_id),",
+						"     asc(constructor_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1 && !isNull(constructor_id) && !isNull(constructor_name)) ~> soloValidos",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          constructor_id as integer,",
+						"          constructor_ref as string,",
+						"          constructor_name as string,",
+						"          nationality as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          constructor_id,",
+						"          constructor_ref,",
+						"          constructor_name,",
+						"          nationality",
+						"     )) ~> silverConstructors"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_drivers')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeDrivers"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverDrivers"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "normalizarTextos"
+						},
+						{
+							"name": "convertirFecha"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          driverId as string,",
+						"          driverRef as string,",
+						"          number as string,",
+						"          code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeDrivers",
+						"bronzeDrivers derive(driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          driverRef = iif(isNull(driverRef) || trim(driverRef) == '' || upper(trim(driverRef)) == 'NULL' || upper(trim(driverRef)) == 'N/A' || trim(driverRef) == '\\\\N', toString(null()), trim(driverRef)),",
+						"          number = iif(isNull(number) || trim(number) == '' || upper(trim(number)) == 'NULL' || upper(trim(number)) == 'N/A' || trim(number) == '\\\\N', toString(null()), trim(number)),",
+						"          code = iif(isNull(code) || trim(code) == '' || upper(trim(code)) == 'NULL' || upper(trim(code)) == 'N/A' || trim(code) == '\\\\N', toString(null()), trim(code)),",
+						"          forename = iif(isNull(forename) || trim(forename) == '' || upper(trim(forename)) == 'NULL' || upper(trim(forename)) == 'N/A' || trim(forename) == '\\\\N', toString(null()), trim(forename)),",
+						"          surname = iif(isNull(surname) || trim(surname) == '' || upper(trim(surname)) == 'NULL' || upper(trim(surname)) == 'N/A' || trim(surname) == '\\\\N', toString(null()), trim(surname)),",
+						"          dob = iif(isNull(dob) || trim(dob) == '' || upper(trim(dob)) == 'NULL' || upper(trim(dob)) == 'N/A' || trim(dob) == '\\\\N', toString(null()), trim(dob)),",
+						"          nationality = iif(isNull(nationality) || trim(nationality) == '' || upper(trim(nationality)) == 'NULL' || upper(trim(nationality)) == 'N/A' || trim(nationality) == '\\\\N', toString(null()), trim(nationality))) ~> limpiarTodo",
+						"limpiarTodo derive(forename = iif((forename == lower(forename) || forename == upper(forename)), replace(initCap(lower(replace(forename, '-', '~ '))), '~ ', '-'), forename),",
+						"          surname = iif((surname == lower(surname) || surname == upper(surname)), replace(initCap(lower(replace(surname, '-', '~ '))), '~ ', '-'), surname),",
+						"          nationality = case(isNull(nationality), 'Unknown', lower(nationality) == 'argentinian', 'Argentine', (nationality == lower(nationality) || nationality == upper(nationality)), replace(initCap(lower(replace(nationality, '-', '~ '))), '~ ', '-'), nationality)) ~> normalizarTextos",
+						"normalizarTextos derive(dob = case(regexMatch(dob, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'), toDate(dob, 'yyyy-MM-dd'), regexMatch(dob, '^[0-9]{2}/[0-9]{2}/[0-9]{4}$'), toDate(dob, 'dd/MM/yyyy'), regexMatch(dob, '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'), toDate(dob, 'MM-dd-yyyy'), regexMatch(dob, '^[0-9]{4}/[0-9]{2}/[0-9]{2}$'), toDate(dob, 'yyyy/MM/dd'), regexMatch(dob, '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}$'), toDate(dob, 'dd-MMM-yyyy'))) ~> convertirFecha",
+						"convertirFecha derive(driver_id = toInteger(driverId),",
+						"          driver_ref = driverRef,",
+						"          permanent_number = toInteger(number),",
+						"          driver_code = upper(code)) ~> convertirTipos",
+						"convertirTipos window(over(driver_id),",
+						"     asc(driver_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1 && !isNull(driver_id) && !isNull(forename) && !isNull(surname)) ~> soloValidos",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          driver_id,",
+						"          driver_ref,",
+						"          permanent_number,",
+						"          driver_code,",
+						"          forename,",
+						"          surname,",
+						"          dob,",
+						"          nationality",
+						"     )) ~> silverDrivers"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_lap_times')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_lap_times_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeLapTimes"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveDrivers"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_lap_times_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverLapTimes"
+						}
+					],
+					"transformations": [
+						{
+							"name": "seleccionarCarrera"
+						},
+						{
+							"name": "seleccionarPiloto"
+						},
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "buscarCarrera"
+						},
+						{
+							"name": "buscarPiloto"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "prepararCuarentena"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          lap as string,",
+						"          position as string,",
+						"          time as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeLapTimes",
+						"source(output(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveRaces",
+						"source(output(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveDrivers",
+						"claveRaces select(mapColumn(",
+						"          chk_race = race_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+						"claveDrivers select(mapColumn(",
+						"          chk_driver = driver_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+						"bronzeLapTimes derive(raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          lap = iif(isNull(lap) || trim(lap) == '' || upper(trim(lap)) == 'NULL' || upper(trim(lap)) == 'N/A' || trim(lap) == '\\\\N', toString(null()), trim(lap)),",
+						"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position)),",
+						"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds))) ~> limpiarTodo",
+						"limpiarTodo derive(race_id = toInteger(raceId),",
+						"          driver_id = toInteger(driverId),",
+						"          lap_number = toInteger(lap),",
+						"          lap_position = toInteger(position),",
+						"          lap_time_ms = toInteger(milliseconds)) ~> convertirTipos",
+						"convertirTipos, seleccionarCarrera lookup(race_id == chk_race,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCarrera",
+						"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarPiloto",
+						"buscarPiloto derive(motivo = case(isNull(race_id) || isNull(driver_id) || isNull(lap_number) || isNull(lap_position) || isNull(lap_time_ms), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', lap_time_ms <= 0, 'Tiempo de vuelta no positivo', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@rechazados derive(raw_result_id = concat(raceId, '-', driverId, '-', lap),",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = driverId,",
+						"          raw_constructor_id = toString(null()),",
+						"          raw_points = toString(null()),",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'lap_times.csv') ~> prepararCuarentena",
+						"dividirRechazos@validos window(over(race_id,",
+						"          driver_id,",
+						"          lap_number),",
+						"     asc(lap_time_ms, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          race_id as integer,",
+						"          driver_id as integer,",
+						"          lap_number as integer,",
+						"          lap_position as integer,",
+						"          lap_time_ms as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          race_id,",
+						"          driver_id,",
+						"          lap_number,",
+						"          lap_position,",
+						"          lap_time_ms",
+						"     )) ~> silverLapTimes"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_pit_stops')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_pit_stops_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzePitStops"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveDrivers"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_pit_stops_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverPitStops"
+						}
+					],
+					"transformations": [
+						{
+							"name": "seleccionarCarrera"
+						},
+						{
+							"name": "seleccionarPiloto"
+						},
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "buscarCarrera"
+						},
+						{
+							"name": "buscarPiloto"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "prepararCuarentena"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          stop as string,",
+						"          lap as string,",
+						"          time as string,",
+						"          duration as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzePitStops",
+						"source(output(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveRaces",
+						"source(output(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveDrivers",
+						"claveRaces select(mapColumn(",
+						"          chk_race = race_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+						"claveDrivers select(mapColumn(",
+						"          chk_driver = driver_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+						"bronzePitStops derive(raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          stop = iif(isNull(stop) || trim(stop) == '' || upper(trim(stop)) == 'NULL' || upper(trim(stop)) == 'N/A' || trim(stop) == '\\\\N', toString(null()), trim(stop)),",
+						"          lap = iif(isNull(lap) || trim(lap) == '' || upper(trim(lap)) == 'NULL' || upper(trim(lap)) == 'N/A' || trim(lap) == '\\\\N', toString(null()), trim(lap)),",
+						"          duration = iif(isNull(duration) || trim(duration) == '' || upper(trim(duration)) == 'NULL' || upper(trim(duration)) == 'N/A' || trim(duration) == '\\\\N', toString(null()), trim(duration)),",
+						"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds))) ~> limpiarTodo",
+						"limpiarTodo derive(race_id = toInteger(raceId),",
+						"          driver_id = toInteger(driverId),",
+						"          stop_number = toInteger(stop),",
+						"          lap_number = toInteger(lap),",
+						"          duration_ms = toInteger(milliseconds)) ~> convertirTipos",
+						"convertirTipos, seleccionarCarrera lookup(race_id == chk_race,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCarrera",
+						"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarPiloto",
+						"buscarPiloto derive(motivo = case(isNull(race_id) || isNull(driver_id) || isNull(stop_number) || isNull(lap_number) || isNull(duration_ms), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', duration_ms <= 0, 'Duración no positiva', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@rechazados derive(raw_result_id = concat(raceId, '-', driverId, '-', stop),",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = driverId,",
+						"          raw_constructor_id = toString(null()),",
+						"          raw_points = toString(null()),",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'pit_stops.csv') ~> prepararCuarentena",
+						"dividirRechazos@validos window(over(race_id,",
+						"          driver_id,",
+						"          stop_number),",
+						"     asc(lap_number, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          race_id as integer,",
+						"          driver_id as integer,",
+						"          stop_number as integer,",
+						"          lap_number as integer,",
+						"          duration_ms as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          race_id,",
+						"          driver_id,",
+						"          stop_number,",
+						"          lap_number,",
+						"          duration_ms",
+						"     )) ~> silverPitStops"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_qualifying')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_qualifying_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeQualifying"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveDrivers"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveConstructors"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_qualifying_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverQualifying"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "convertirTiempos"
+						},
+						{
+							"name": "buscarCarrera"
+						},
+						{
+							"name": "seleccionarCarrera"
+						},
+						{
+							"name": "seleccionarPiloto"
+						},
+						{
+							"name": "seleccionarConstructor"
+						},
+						{
+							"name": "buscarPiloto"
+						},
+						{
+							"name": "buscarConstructor"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						},
+						{
+							"name": "prepararCuarentena"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          qualifyId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          position as string,",
+						"          q1 as string,",
+						"          q2 as string,",
+						"          q3 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeQualifying",
+						"source(output(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveRaces",
+						"source(output(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveDrivers",
+						"source(output(",
+						"          constructor_id as integer,",
+						"          constructor_ref as string,",
+						"          constructor_name as string,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveConstructors",
+						"bronzeQualifying derive(qualifyId = iif(isNull(qualifyId) || trim(qualifyId) == '' || upper(trim(qualifyId)) == 'NULL' || upper(trim(qualifyId)) == 'N/A' || trim(qualifyId) == '\\\\N', toString(null()), trim(qualifyId)),",
+						"          q1 = iif(isNull(q1) || trim(q1) == '' || upper(trim(q1)) == 'NULL' || upper(trim(q1)) == 'N/A' || trim(q1) == '\\\\N', toString(null()), trim(q1)),",
+						"          q2 = iif(isNull(q2) || trim(q2) == '' || upper(trim(q2)) == 'NULL' || upper(trim(q2)) == 'N/A' || trim(q2) == '\\\\N', toString(null()), trim(q2)),",
+						"          q3 = iif(isNull(q3) || trim(q3) == '' || upper(trim(q3)) == 'NULL' || upper(trim(q3)) == 'N/A' || trim(q3) == '\\\\N', toString(null()), trim(q3)),",
+						"          raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          number = iif(isNull(number) || trim(number) == '' || upper(trim(number)) == 'NULL' || upper(trim(number)) == 'N/A' || trim(number) == '\\\\N', toString(null()), trim(number)),",
+						"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+						"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position))) ~> limpiarTodo",
+						"limpiarTodo derive(qualify_id = toInteger(qualifyId),",
+						"          race_id = toInteger(raceId),",
+						"          driver_id = toInteger(driverId),",
+						"          constructor_id = toInteger(constructorId),",
+						"          car_number = toInteger(number),",
+						"          qualifying_position = toInteger(position)) ~> convertirTipos",
+						"convertirTipos derive(q1_ms = iif(regexMatch(q1, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(q1, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(q1, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(q1, '^.*[.]', '')), toInteger(null())),",
+						"          q2_ms = iif(regexMatch(q2, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(q2, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(q2, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(q2, '^.*[.]', '')), toInteger(null())),",
+						"          q3_ms = iif(regexMatch(q3, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(q3, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(q3, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(q3, '^.*[.]', '')), toInteger(null()))) ~> convertirTiempos",
+						"convertirTiempos, seleccionarCarrera lookup(race_id == chk_race,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCarrera",
+						"claveRaces select(mapColumn(",
+						"          chk_race = race_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+						"claveDrivers select(mapColumn(",
+						"          chk_driver = driver_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+						"claveConstructors select(mapColumn(",
+						"          chk_constructor = constructor_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarConstructor",
+						"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarPiloto",
+						"buscarPiloto, seleccionarConstructor lookup(constructor_id == chk_constructor,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarConstructor",
+						"buscarConstructor derive(motivo = case(isNull(qualify_id) || isNull(race_id) || isNull(driver_id) || isNull(constructor_id) || isNull(qualifying_position), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', isNull(chk_constructor), 'Llave foránea inexistente: constructor_id', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@validos window(over(qualify_id),",
+						"     asc(qualify_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"dividirRechazos@rechazados derive(raw_result_id = qualifyId,",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = driverId,",
+						"          raw_constructor_id = constructorId,",
+						"          raw_points = toString(null()),",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'qualifying.csv') ~> prepararCuarentena",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          qualify_id as integer,",
+						"          race_id as integer,",
+						"          driver_id as integer,",
+						"          constructor_id as integer,",
+						"          car_number as integer,",
+						"          qualifying_position as integer,",
+						"          q1_ms as integer,",
+						"          q2_ms as integer,",
+						"          q3_ms as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          qualify_id,",
+						"          race_id,",
+						"          driver_id,",
+						"          constructor_id,",
+						"          car_number,",
+						"          qualifying_position,",
+						"          q1_ms,",
+						"          q2_ms,",
+						"          q3_ms",
+						"     )) ~> silverQualifying",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_races')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_circuits_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveCircuits"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						}
+					],
+					"transformations": [
+						{
+							"name": "seleccionarClave"
+						},
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "normalizarNombre"
+						},
+						{
+							"name": "convertirFechas"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "buscarCircuito"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "prepararCuarentena"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          year as string,",
+						"          round as string,",
+						"          circuitId as string,",
+						"          name as string,",
+						"          date as string,",
+						"          time as string,",
+						"          url as string,",
+						"          fp1_date as string,",
+						"          fp1_time as string,",
+						"          fp2_date as string,",
+						"          fp2_time as string,",
+						"          fp3_date as string,",
+						"          fp3_time as string,",
+						"          quali_date as string,",
+						"          quali_time as string,",
+						"          sprint_date as string,",
+						"          sprint_time as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeRaces",
+						"source(output(",
+						"          circuit_id as integer,",
+						"          circuit_ref as string,",
+						"          circuit_name as string,",
+						"          location as string,",
+						"          country as string,",
+						"          latitude as decimal(9,6),",
+						"          longitude as decimal(9,6),",
+						"          altitude_m as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveCircuits",
+						"claveCircuits select(mapColumn(",
+						"          chk_circuit = circuit_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarClave",
+						"bronzeRaces derive(raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          year = iif(isNull(year) || trim(year) == '' || upper(trim(year)) == 'NULL' || upper(trim(year)) == 'N/A' || trim(year) == '\\\\N', toString(null()), trim(year)),",
+						"          round = iif(isNull(round) || trim(round) == '' || upper(trim(round)) == 'NULL' || upper(trim(round)) == 'N/A' || trim(round) == '\\\\N', toString(null()), trim(round)),",
+						"          circuitId = iif(isNull(circuitId) || trim(circuitId) == '' || upper(trim(circuitId)) == 'NULL' || upper(trim(circuitId)) == 'N/A' || trim(circuitId) == '\\\\N', toString(null()), trim(circuitId)),",
+						"          name = iif(isNull(name) || trim(name) == '' || upper(trim(name)) == 'NULL' || upper(trim(name)) == 'N/A' || trim(name) == '\\\\N', toString(null()), trim(name)),",
+						"          date = iif(isNull(date) || trim(date) == '' || upper(trim(date)) == 'NULL' || upper(trim(date)) == 'N/A' || trim(date) == '\\\\N', toString(null()), trim(date)),",
+						"          time = iif(isNull(time) || trim(time) == '' || upper(trim(time)) == 'NULL' || upper(trim(time)) == 'N/A' || trim(time) == '\\\\N', toString(null()), trim(time)),",
+						"          sprint_date = iif(isNull(sprint_date) || trim(sprint_date) == '' || upper(trim(sprint_date)) == 'NULL' || upper(trim(sprint_date)) == 'N/A' || trim(sprint_date) == '\\\\N', toString(null()), trim(sprint_date))) ~> limpiarTodo",
+						"limpiarTodo derive(race_name = iif((name == lower(name) || name == upper(name)), replace(initCap(lower(replace(name, '-', '~ '))), '~ ', '-'), name)) ~> normalizarNombre",
+						"normalizarNombre derive(race_date = case(regexMatch(date, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'), toDate(date, 'yyyy-MM-dd'), regexMatch(date, '^[0-9]{2}/[0-9]{2}/[0-9]{4}$'), toDate(date, 'dd/MM/yyyy'), regexMatch(date, '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'), toDate(date, 'MM-dd-yyyy'), regexMatch(date, '^[0-9]{4}/[0-9]{2}/[0-9]{2}$'), toDate(date, 'yyyy/MM/dd'), regexMatch(date, '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}$'), toDate(date, 'dd-MMM-yyyy')),",
+						"          sprint_date = case(regexMatch(sprint_date, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'), toDate(sprint_date, 'yyyy-MM-dd'), regexMatch(sprint_date, '^[0-9]{2}/[0-9]{2}/[0-9]{4}$'), toDate(sprint_date, 'dd/MM/yyyy'), regexMatch(sprint_date, '^[0-9]{2}-[0-9]{2}-[0-9]{4}$'), toDate(sprint_date, 'MM-dd-yyyy'), regexMatch(sprint_date, '^[0-9]{4}/[0-9]{2}/[0-9]{2}$'), toDate(sprint_date, 'yyyy/MM/dd'), regexMatch(sprint_date, '^[0-9]{2}-[A-Za-z]{3}-[0-9]{4}$'), toDate(sprint_date, 'dd-MMM-yyyy'))) ~> convertirFechas",
+						"convertirFechas derive(race_id = toInteger(raceId),",
+						"          season_year = toInteger(year),",
+						"          round_number = toInteger(round),",
+						"          circuit_id = toInteger(circuitId),",
+						"          race_time_utc = iif(regexMatch(time, '^[0-9]{2}:[0-9]{2}:[0-9]{2}$'), time, toString(null()))) ~> convertirTipos",
+						"convertirTipos, seleccionarClave lookup(circuit_id == chk_circuit,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCircuito",
+						"buscarCircuito derive(motivo = case(isNull(race_id) || isNull(season_year) || isNull(round_number) || isNull(circuit_id) || isNull(race_date) || isNull(race_name), 'Formato inválido o campo obligatorio vacío', isNull(chk_circuit), 'Llave foránea inexistente: circuit_id', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@rechazados derive(raw_result_id = raceId,",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = toString(null()),",
+						"          raw_constructor_id = toString(null()),",
+						"          raw_points = toString(null()),",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'races.csv') ~> prepararCuarentena",
+						"dividirRechazos@validos window(over(race_id),",
+						"     asc(race_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          race_id,",
+						"          season_year,",
+						"          round_number,",
+						"          circuit_id,",
+						"          race_name,",
+						"          race_date,",
+						"          race_time_utc,",
+						"          sprint_date",
+						"     )) ~> silverRaces",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_results')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeResults"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveDrivers"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveConstructors"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_status_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverResults"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						}
+					],
+					"transformations": [
+						{
+							"name": "seleccionarCarrera"
+						},
+						{
+							"name": "seleccionarPiloto"
+						},
+						{
+							"name": "seleccionarConstructor"
+						},
+						{
+							"name": "seleccionarEstado"
+						},
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "convertirTiempos"
+						},
+						{
+							"name": "buscarCarrera"
+						},
+						{
+							"name": "buscarPiloto"
+						},
+						{
+							"name": "buscarConstructor"
+						},
+						{
+							"name": "buscarEstado"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						},
+						{
+							"name": "prepararCuarentena"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          rank as string,",
+						"          fastestLapTime as string,",
+						"          fastestLapSpeed as string,",
+						"          statusId as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeResults",
+						"source(output(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveRaces",
+						"source(output(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveDrivers",
+						"source(output(",
+						"          constructor_id as integer,",
+						"          constructor_ref as string,",
+						"          constructor_name as string,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveConstructors",
+						"source(output(",
+						"          status_id as integer,",
+						"          status_description as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveStatus",
+						"claveRaces select(mapColumn(",
+						"          chk_race = race_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+						"claveDrivers select(mapColumn(",
+						"          chk_driver = driver_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+						"claveConstructors select(mapColumn(",
+						"          chk_constructor = constructor_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarConstructor",
+						"claveStatus select(mapColumn(",
+						"          chk_status = status_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarEstado",
+						"bronzeResults derive(resultId = iif(isNull(resultId) || trim(resultId) == '' || upper(trim(resultId)) == 'NULL' || upper(trim(resultId)) == 'N/A' || trim(resultId) == '\\\\N', toString(null()), trim(resultId)),",
+						"          raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+						"          number = iif(isNull(number) || trim(number) == '' || upper(trim(number)) == 'NULL' || upper(trim(number)) == 'N/A' || trim(number) == '\\\\N', toString(null()), trim(number)),",
+						"          grid = iif(isNull(grid) || trim(grid) == '' || upper(trim(grid)) == 'NULL' || upper(trim(grid)) == 'N/A' || trim(grid) == '\\\\N', toString(null()), trim(grid)),",
+						"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position)),",
+						"          positionOrder = iif(isNull(positionOrder) || trim(positionOrder) == '' || upper(trim(positionOrder)) == 'NULL' || upper(trim(positionOrder)) == 'N/A' || trim(positionOrder) == '\\\\N', toString(null()), trim(positionOrder)),",
+						"          points = iif(isNull(points) || trim(points) == '' || upper(trim(points)) == 'NULL' || upper(trim(points)) == 'N/A' || trim(points) == '\\\\N', toString(null()), trim(points)),",
+						"          laps = iif(isNull(laps) || trim(laps) == '' || upper(trim(laps)) == 'NULL' || upper(trim(laps)) == 'N/A' || trim(laps) == '\\\\N', toString(null()), trim(laps)),",
+						"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds)),",
+						"          fastestLap = iif(isNull(fastestLap) || trim(fastestLap) == '' || upper(trim(fastestLap)) == 'NULL' || upper(trim(fastestLap)) == 'N/A' || trim(fastestLap) == '\\\\N', toString(null()), trim(fastestLap)),",
+						"          rank = iif(isNull(rank) || trim(rank) == '' || upper(trim(rank)) == 'NULL' || upper(trim(rank)) == 'N/A' || trim(rank) == '\\\\N', toString(null()), trim(rank)),",
+						"          fastestLapTime = iif(isNull(fastestLapTime) || trim(fastestLapTime) == '' || upper(trim(fastestLapTime)) == 'NULL' || upper(trim(fastestLapTime)) == 'N/A' || trim(fastestLapTime) == '\\\\N', toString(null()), trim(fastestLapTime)),",
+						"          fastestLapSpeed = iif(isNull(fastestLapSpeed) || trim(fastestLapSpeed) == '' || upper(trim(fastestLapSpeed)) == 'NULL' || upper(trim(fastestLapSpeed)) == 'N/A' || trim(fastestLapSpeed) == '\\\\N', toString(null()), trim(fastestLapSpeed)),",
+						"          statusId = iif(isNull(statusId) || trim(statusId) == '' || upper(trim(statusId)) == 'NULL' || upper(trim(statusId)) == 'N/A' || trim(statusId) == '\\\\N', toString(null()), trim(statusId))) ~> limpiarTodo",
+						"limpiarTodo derive(result_id = toInteger(resultId),",
+						"          race_id = toInteger(raceId),",
+						"          driver_id = toInteger(driverId),",
+						"          constructor_id = toInteger(constructorId),",
+						"          status_id = toInteger(statusId),",
+						"          car_number = toInteger(number),",
+						"          grid_position = toInteger(grid),",
+						"          final_position = toInteger(position),",
+						"          position_order = toInteger(positionOrder),",
+						"          points_num = toDecimal(points, 6, 2),",
+						"          laps_completed = toInteger(laps),",
+						"          race_time_ms = toLong(milliseconds),",
+						"          fastest_lap_number = toInteger(fastestLap),",
+						"          fastest_lap_rank = toInteger(rank),",
+						"          fastest_lap_speed_kph = toDecimal(fastestLapSpeed, 6, 3)) ~> convertirTipos",
+						"convertirTipos derive(fastest_lap_ms = iif(regexMatch(fastestLapTime, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(fastestLapTime, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(fastestLapTime, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(fastestLapTime, '^.*[.]', '')), toInteger(null()))) ~> convertirTiempos",
+						"convertirTiempos, seleccionarCarrera lookup(race_id == chk_race,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCarrera",
+						"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarPiloto",
+						"buscarPiloto, seleccionarConstructor lookup(constructor_id == chk_constructor,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarConstructor",
+						"buscarConstructor, seleccionarEstado lookup(status_id == chk_status,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarEstado",
+						"buscarEstado derive(motivo = case(isNull(result_id) || isNull(race_id) || isNull(driver_id) || isNull(constructor_id) || isNull(status_id) || isNull(grid_position) || isNull(position_order) || isNull(points_num) || isNull(laps_completed), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', isNull(chk_constructor), 'Llave foránea inexistente: constructor_id', isNull(chk_status), 'Llave foránea inexistente: status_id', startsWith(points, '-'), 'Puntos negativos (CHECK points >= 0)', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@validos window(over(result_id),",
+						"     asc(result_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"dividirRechazos@rechazados derive(raw_result_id = resultId,",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = driverId,",
+						"          raw_constructor_id = constructorId,",
+						"          raw_points = points,",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'results.csv') ~> prepararCuarentena",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          result_id as integer,",
+						"          race_id as integer,",
+						"          driver_id as integer,",
+						"          constructor_id as integer,",
+						"          status_id as integer,",
+						"          car_number as integer,",
+						"          grid_position as integer,",
+						"          final_position as integer,",
+						"          position_order as integer,",
+						"          points as decimal(6,2),",
+						"          laps_completed as integer,",
+						"          race_time_ms as long,",
+						"          fastest_lap_number as integer,",
+						"          fastest_lap_rank as integer,",
+						"          fastest_lap_ms as integer,",
+						"          fastest_lap_speed_kph as decimal(6,3)",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          result_id,",
+						"          race_id,",
+						"          driver_id,",
+						"          constructor_id,",
+						"          status_id,",
+						"          car_number,",
+						"          grid_position,",
+						"          final_position,",
+						"          position_order,",
+						"          points = points_num,",
+						"          laps_completed,",
+						"          race_time_ms,",
+						"          fastest_lap_number,",
+						"          fastest_lap_rank,",
+						"          fastest_lap_ms,",
+						"          fastest_lap_speed_kph",
+						"     )) ~> silverResults",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_sprint_results')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_sprint_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeSprint"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveRaces"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveDrivers"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveConstructors"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_status_sql",
+								"type": "DatasetReference"
+							},
+							"name": "claveStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_sprint_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverSprint"
+						},
+						{
+							"dataset": {
+								"referenceName": "dw_silver_quarantine_results_sql",
+								"type": "DatasetReference"
+							},
+							"name": "cuarentena"
+						}
+					],
+					"transformations": [
+						{
+							"name": "seleccionarCarrera"
+						},
+						{
+							"name": "seleccionarPiloto"
+						},
+						{
+							"name": "seleccionarConstructor"
+						},
+						{
+							"name": "seleccionarEstado"
+						},
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "convertirTiempos"
+						},
+						{
+							"name": "buscarCarrera"
+						},
+						{
+							"name": "buscarPiloto"
+						},
+						{
+							"name": "buscarConstructor"
+						},
+						{
+							"name": "buscarEstado"
+						},
+						{
+							"name": "evaluarRechazo"
+						},
+						{
+							"name": "dividirRechazos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						},
+						{
+							"name": "prepararCuarentena"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          resultId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          grid as string,",
+						"          position as string,",
+						"          positionText as string,",
+						"          positionOrder as string,",
+						"          points as string,",
+						"          laps as string,",
+						"          time as string,",
+						"          milliseconds as string,",
+						"          fastestLap as string,",
+						"          fastestLapTime as string,",
+						"          statusId as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeSprint",
+						"source(output(",
+						"          race_id as integer,",
+						"          season_year as integer,",
+						"          round_number as integer,",
+						"          circuit_id as integer,",
+						"          race_name as string,",
+						"          race_date as date,",
+						"          race_time_utc as string,",
+						"          sprint_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveRaces",
+						"source(output(",
+						"          driver_id as integer,",
+						"          driver_ref as string,",
+						"          permanent_number as integer,",
+						"          driver_code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as date,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveDrivers",
+						"source(output(",
+						"          constructor_id as integer,",
+						"          constructor_ref as string,",
+						"          constructor_name as string,",
+						"          nationality as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveConstructors",
+						"source(output(",
+						"          status_id as integer,",
+						"          status_description as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> claveStatus",
+						"claveRaces select(mapColumn(",
+						"          chk_race = race_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarCarrera",
+						"claveDrivers select(mapColumn(",
+						"          chk_driver = driver_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarPiloto",
+						"claveConstructors select(mapColumn(",
+						"          chk_constructor = constructor_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarConstructor",
+						"claveStatus select(mapColumn(",
+						"          chk_status = status_id",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> seleccionarEstado",
+						"bronzeSprint derive(resultId = iif(isNull(resultId) || trim(resultId) == '' || upper(trim(resultId)) == 'NULL' || upper(trim(resultId)) == 'N/A' || trim(resultId) == '\\\\N', toString(null()), trim(resultId)),",
+						"          raceId = iif(isNull(raceId) || trim(raceId) == '' || upper(trim(raceId)) == 'NULL' || upper(trim(raceId)) == 'N/A' || trim(raceId) == '\\\\N', toString(null()), trim(raceId)),",
+						"          driverId = iif(isNull(driverId) || trim(driverId) == '' || upper(trim(driverId)) == 'NULL' || upper(trim(driverId)) == 'N/A' || trim(driverId) == '\\\\N', toString(null()), trim(driverId)),",
+						"          constructorId = iif(isNull(constructorId) || trim(constructorId) == '' || upper(trim(constructorId)) == 'NULL' || upper(trim(constructorId)) == 'N/A' || trim(constructorId) == '\\\\N', toString(null()), trim(constructorId)),",
+						"          number = iif(isNull(number) || trim(number) == '' || upper(trim(number)) == 'NULL' || upper(trim(number)) == 'N/A' || trim(number) == '\\\\N', toString(null()), trim(number)),",
+						"          grid = iif(isNull(grid) || trim(grid) == '' || upper(trim(grid)) == 'NULL' || upper(trim(grid)) == 'N/A' || trim(grid) == '\\\\N', toString(null()), trim(grid)),",
+						"          position = iif(isNull(position) || trim(position) == '' || upper(trim(position)) == 'NULL' || upper(trim(position)) == 'N/A' || trim(position) == '\\\\N', toString(null()), trim(position)),",
+						"          positionOrder = iif(isNull(positionOrder) || trim(positionOrder) == '' || upper(trim(positionOrder)) == 'NULL' || upper(trim(positionOrder)) == 'N/A' || trim(positionOrder) == '\\\\N', toString(null()), trim(positionOrder)),",
+						"          points = iif(isNull(points) || trim(points) == '' || upper(trim(points)) == 'NULL' || upper(trim(points)) == 'N/A' || trim(points) == '\\\\N', toString(null()), trim(points)),",
+						"          laps = iif(isNull(laps) || trim(laps) == '' || upper(trim(laps)) == 'NULL' || upper(trim(laps)) == 'N/A' || trim(laps) == '\\\\N', toString(null()), trim(laps)),",
+						"          milliseconds = iif(isNull(milliseconds) || trim(milliseconds) == '' || upper(trim(milliseconds)) == 'NULL' || upper(trim(milliseconds)) == 'N/A' || trim(milliseconds) == '\\\\N', toString(null()), trim(milliseconds)),",
+						"          fastestLap = iif(isNull(fastestLap) || trim(fastestLap) == '' || upper(trim(fastestLap)) == 'NULL' || upper(trim(fastestLap)) == 'N/A' || trim(fastestLap) == '\\\\N', toString(null()), trim(fastestLap)),",
+						"          fastestLapTime = iif(isNull(fastestLapTime) || trim(fastestLapTime) == '' || upper(trim(fastestLapTime)) == 'NULL' || upper(trim(fastestLapTime)) == 'N/A' || trim(fastestLapTime) == '\\\\N', toString(null()), trim(fastestLapTime)),",
+						"          statusId = iif(isNull(statusId) || trim(statusId) == '' || upper(trim(statusId)) == 'NULL' || upper(trim(statusId)) == 'N/A' || trim(statusId) == '\\\\N', toString(null()), trim(statusId))) ~> limpiarTodo",
+						"limpiarTodo derive(sprint_result_id = toInteger(resultId),",
+						"          race_id = toInteger(raceId),",
+						"          driver_id = toInteger(driverId),",
+						"          constructor_id = toInteger(constructorId),",
+						"          status_id = toInteger(statusId),",
+						"          car_number = toInteger(number),",
+						"          grid_position = toInteger(grid),",
+						"          final_position = toInteger(position),",
+						"          position_order = toInteger(positionOrder),",
+						"          points_num = toDecimal(points, 6, 2),",
+						"          laps_completed = toInteger(laps),",
+						"          sprint_time_ms = toLong(milliseconds),",
+						"          fastest_lap_number = toInteger(fastestLap)) ~> convertirTipos",
+						"convertirTipos derive(fastest_lap_ms = iif(regexMatch(fastestLapTime, '^[0-9]{1,2}:[0-9]{2}[.][0-9]{3}$'), toInteger(regexReplace(fastestLapTime, '[:].*$', '')) * 60000 + toInteger(regexReplace(regexReplace(fastestLapTime, '^[0-9]+[:]', ''), '[.].*$', '')) * 1000 + toInteger(regexReplace(fastestLapTime, '^.*[.]', '')), toInteger(null()))) ~> convertirTiempos",
+						"convertirTiempos, seleccionarCarrera lookup(race_id == chk_race,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarCarrera",
+						"buscarCarrera, seleccionarPiloto lookup(driver_id == chk_driver,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarPiloto",
+						"buscarPiloto, seleccionarConstructor lookup(constructor_id == chk_constructor,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarConstructor",
+						"buscarConstructor, seleccionarEstado lookup(status_id == chk_status,",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> buscarEstado",
+						"buscarEstado derive(motivo = case(isNull(sprint_result_id) || isNull(race_id) || isNull(driver_id) || isNull(constructor_id) || isNull(status_id) || isNull(grid_position) || isNull(position_order) || isNull(points_num) || isNull(laps_completed), 'Formato inválido o campo obligatorio vacío', isNull(chk_race), 'Llave foránea inexistente: race_id', isNull(chk_driver), 'Llave foránea inexistente: driver_id', isNull(chk_constructor), 'Llave foránea inexistente: constructor_id', isNull(chk_status), 'Llave foránea inexistente: status_id', startsWith(points, '-'), 'Puntos negativos (CHECK points >= 0)', 'OK')) ~> evaluarRechazo",
+						"evaluarRechazo split(motivo != 'OK',",
+						"     disjoint: false) ~> dividirRechazos@(rechazados, validos)",
+						"dividirRechazos@validos window(over(sprint_result_id),",
+						"     asc(sprint_result_id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1) ~> soloValidos",
+						"dividirRechazos@rechazados derive(raw_result_id = resultId,",
+						"          raw_race_id = raceId,",
+						"          raw_driver_id = driverId,",
+						"          raw_constructor_id = constructorId,",
+						"          raw_points = points,",
+						"          quarantine_reason = motivo,",
+						"          {_source_file} = 'sprint_results.csv') ~> prepararCuarentena",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          sprint_result_id as integer,",
+						"          race_id as integer,",
+						"          driver_id as integer,",
+						"          constructor_id as integer,",
+						"          status_id as integer,",
+						"          car_number as integer,",
+						"          grid_position as integer,",
+						"          final_position as integer,",
+						"          position_order as integer,",
+						"          points as decimal(6,2),",
+						"          laps_completed as integer,",
+						"          sprint_time_ms as long,",
+						"          fastest_lap_number as integer,",
+						"          fastest_lap_ms as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          sprint_result_id,",
+						"          race_id,",
+						"          driver_id,",
+						"          constructor_id,",
+						"          status_id,",
+						"          car_number,",
+						"          grid_position,",
+						"          final_position,",
+						"          position_order,",
+						"          points = points_num,",
+						"          laps_completed,",
+						"          sprint_time_ms,",
+						"          fastest_lap_number,",
+						"          fastest_lap_ms",
+						"     )) ~> silverSprint",
+						"prepararCuarentena sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          quarantine_id as long,",
+						"          raw_result_id as string,",
+						"          raw_race_id as string,",
+						"          raw_driver_id as string,",
+						"          raw_constructor_id as string,",
+						"          raw_points as string,",
+						"          quarantine_reason as string,",
+						"          {_source_file} as string,",
+						"          {_rejected_at} as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raw_result_id,",
+						"          raw_race_id,",
+						"          raw_driver_id,",
+						"          raw_constructor_id,",
+						"          raw_points,",
+						"          quarantine_reason,",
+						"          {_source_file}",
+						"     )) ~> cuarentena"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_silver_status')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "silver"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_status_sql",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeStatus"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_silver_status_sql",
+								"type": "DatasetReference"
+							},
+							"name": "silverStatus"
+						}
+					],
+					"transformations": [
+						{
+							"name": "limpiarTodo"
+						},
+						{
+							"name": "convertirTipos"
+						},
+						{
+							"name": "quitarDuplicados"
+						},
+						{
+							"name": "soloValidos"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          statusId as string,",
+						"          status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> bronzeStatus",
+						"bronzeStatus derive(statusId = iif(isNull(statusId) || trim(statusId) == '' || upper(trim(statusId)) == 'NULL' || upper(trim(statusId)) == 'N/A' || trim(statusId) == '\\\\N', toString(null()), trim(statusId)),",
+						"          status = iif(isNull(status) || trim(status) == '' || upper(trim(status)) == 'NULL' || upper(trim(status)) == 'N/A' || trim(status) == '\\\\N', toString(null()), trim(status))) ~> limpiarTodo",
+						"limpiarTodo derive(status_Id = toInteger(statusId),",
+						"          status_description = status) ~> convertirTipos",
+						"convertirTipos window(over(status_id = status_Id),",
+						"     asc(status_Id, true),",
+						"     NumFila = rowNumber()) ~> quitarDuplicados",
+						"quitarDuplicados filter(NumFila == 1 && !isNull(status_Id) && !isNull(status_description)) ~> soloValidos",
+						"soloValidos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          status_id as integer,",
+						"          status_description as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          status_id = status_Id,",
+						"          status_description",
+						"     )) ~> silverStatus"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_bronze')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "limpiar_bronze",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "sql_dw_formula1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "DELETE FROM bronze.status;\nDELETE FROM bronze.circuits;\nDELETE FROM bronze.constructors;\nDELETE FROM bronze.drivers;\nDELETE FROM bronze.races;\nDELETE FROM bronze.results;\nDELETE FROM bronze.sprint_results;\nDELETE FROM bronze.qualifying;\nDELETE FROM bronze.pit_stops;\nDELETE FROM bronze.lap_times;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "df_bronze_status",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "limpiar_bronze",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_status",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeStatus": {},
+									"sinkBronzeStatus": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_circuits",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_status",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_circuits",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeCircuits": {},
+									"sinkBronzeCircuits": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_constructors",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_circuits",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_constructors",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeConstructors": {},
+									"sinkBronzeConstructors": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_drivers",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_constructors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_drivers",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeDrivers": {},
+									"sinkBronzeDrivers": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_races",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_drivers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_races",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeRaces": {},
+									"sinkBronzeRaces": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_results",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_races",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_results",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeResults": {},
+									"sinkBronzeResults": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_sprint_results",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_results",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_sprint_results",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeSprint": {},
+									"sinkBronzeSprint": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_qualifying",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_sprint_results",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_qualifying",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeQualifying": {},
+									"sinkBronzeQualifying": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_pit_stops",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_qualifying",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_pit_stops",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzePitStops": {},
+									"sinkBronzePitStops": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_bronze_lap_times",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_bronze_pit_stops",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_bronze_lap_times",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeLapTimes": {},
+									"sinkBronzeLapTimes": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_bronze_status')]",
+				"[concat(variables('factoryId'), '/dataflows/df_bronze_results')]",
+				"[concat(variables('factoryId'), '/dataflows/df_bronze_sprint_results')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_silver')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "limpiar_silver",
+						"type": "Script",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"linkedServiceName": {
+							"referenceName": "sql_dw_formula1",
+							"type": "LinkedServiceReference"
+						},
+						"typeProperties": {
+							"scripts": [
+								{
+									"type": "NonQuery",
+									"text": "DELETE FROM silver.lap_times;\nDELETE FROM silver.pit_stops;\nDELETE FROM silver.qualifying;\nDELETE FROM silver.sprint_results;\nDELETE FROM silver.results;\nDELETE FROM silver.quarantine_results;\nDELETE FROM silver.races;\nDELETE FROM silver.drivers;\nDELETE FROM silver.constructors;\nDELETE FROM silver.circuits;\nDELETE FROM silver.status;"
+								}
+							],
+							"scriptBlockExecutionTimeout": "02:00:00"
+						}
+					},
+					{
+						"name": "df_silver_status",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "limpiar_silver",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_status",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeStatus": {},
+									"silverStatus": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_circuits",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_status",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_circuits",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeCircuits": {},
+									"silverCircuits": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_constructors",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_circuits",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_constructors",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeConstructors": {},
+									"silverConstructors": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_drivers",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_constructors",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_drivers",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeDrivers": {},
+									"silverDrivers": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_races",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_drivers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_races",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeRaces": {},
+									"claveCircuits": {},
+									"silverRaces": {},
+									"cuarentena": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_results",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_races",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_results",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeResults": {},
+									"claveRaces": {},
+									"claveDrivers": {},
+									"claveConstructors": {},
+									"claveStatus": {},
+									"silverResults": {},
+									"cuarentena": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_sprint_results",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_results",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_sprint_results",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeSprint": {},
+									"claveRaces": {},
+									"claveDrivers": {},
+									"claveConstructors": {},
+									"claveStatus": {},
+									"silverSprint": {},
+									"cuarentena": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_qualifying",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_sprint_results",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_qualifying",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeQualifying": {},
+									"claveRaces": {},
+									"claveDrivers": {},
+									"claveConstructors": {},
+									"silverQualifying": {},
+									"cuarentena": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_pit_stops",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_qualifying",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_pit_stops",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzePitStops": {},
+									"claveRaces": {},
+									"claveDrivers": {},
+									"cuarentena": {},
+									"silverPitStops": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "df_silver_lap_times",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "df_silver_pit_stops",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_silver_lap_times",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"bronzeLapTimes": {},
+									"claveRaces": {},
+									"claveDrivers": {},
+									"cuarentena": {},
+									"silverLapTimes": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_silver_status')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_circuits')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_constructors')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_drivers')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_races')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_results')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_sprint_results')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_qualifying')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_pit_stops')]",
+				"[concat(variables('factoryId'), '/dataflows/df_silver_lap_times')]"
+			]
+		}
+	]
+}

@@ -1,0 +1,1374 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "adf-ucb-f1-br-65743264"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_bronze_sprint_results_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze/sql"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "resultId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "raceId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "driverId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "constructorId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "number",
+						"type": "nvarchar"
+					},
+					{
+						"name": "grid",
+						"type": "nvarchar"
+					},
+					{
+						"name": "position",
+						"type": "nvarchar"
+					},
+					{
+						"name": "positionText",
+						"type": "nvarchar"
+					},
+					{
+						"name": "positionOrder",
+						"type": "nvarchar"
+					},
+					{
+						"name": "points",
+						"type": "nvarchar"
+					},
+					{
+						"name": "laps",
+						"type": "nvarchar"
+					},
+					{
+						"name": "time",
+						"type": "nvarchar"
+					},
+					{
+						"name": "milliseconds",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fastestLap",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fastestLapTime",
+						"type": "nvarchar"
+					},
+					{
+						"name": "statusId",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "sprint_results"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_bronze_status_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "bronze/sql"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "statusId",
+						"type": "nvarchar"
+					},
+					{
+						"name": "status",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "bronze",
+					"table": "status"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_circuits_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "circuit_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "circuit_ref",
+						"type": "varchar"
+					},
+					{
+						"name": "circuit_name",
+						"type": "varchar"
+					},
+					{
+						"name": "location",
+						"type": "varchar"
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "latitude",
+						"type": "decimal",
+						"precision": 9,
+						"scale": 6
+					},
+					{
+						"name": "longitude",
+						"type": "decimal",
+						"precision": 9,
+						"scale": 6
+					},
+					{
+						"name": "altitude_m",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "circuits"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_constructors_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "constructor_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "constructor_ref",
+						"type": "varchar"
+					},
+					{
+						"name": "constructor_name",
+						"type": "varchar"
+					},
+					{
+						"name": "nationality",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "constructors"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_drivers_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_ref",
+						"type": "varchar"
+					},
+					{
+						"name": "permanent_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "driver_code",
+						"type": "char"
+					},
+					{
+						"name": "forename",
+						"type": "varchar"
+					},
+					{
+						"name": "surname",
+						"type": "varchar"
+					},
+					{
+						"name": "dob",
+						"type": "date"
+					},
+					{
+						"name": "nationality",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "drivers"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_lap_times_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "lap_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "lap_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "lap_time_ms",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "lap_times"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_pit_stops_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "stop_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "lap_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "duration_ms",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "pit_stops"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_qualifying_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "qualify_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "constructor_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "car_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "qualifying_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "q1_ms",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "q2_ms",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "q3_ms",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "qualifying"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_quarantine_results_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "quarantine_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "raw_result_id",
+						"type": "varchar"
+					},
+					{
+						"name": "raw_race_id",
+						"type": "varchar"
+					},
+					{
+						"name": "raw_driver_id",
+						"type": "varchar"
+					},
+					{
+						"name": "raw_constructor_id",
+						"type": "varchar"
+					},
+					{
+						"name": "raw_points",
+						"type": "varchar"
+					},
+					{
+						"name": "quarantine_reason",
+						"type": "varchar"
+					},
+					{
+						"name": "_source_file",
+						"type": "varchar"
+					},
+					{
+						"name": "_rejected_at",
+						"type": "datetime2",
+						"scale": 0
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "quarantine_results"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_races_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "season_year",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "round_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "circuit_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "race_name",
+						"type": "varchar"
+					},
+					{
+						"name": "race_date",
+						"type": "date"
+					},
+					{
+						"name": "race_time_utc",
+						"type": "varchar"
+					},
+					{
+						"name": "sprint_date",
+						"type": "date"
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "races"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_results_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "result_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "constructor_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "status_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "car_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "grid_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "final_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "position_order",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "points",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 2
+					},
+					{
+						"name": "laps_completed",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "race_time_ms",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "fastest_lap_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "fastest_lap_rank",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "fastest_lap_ms",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "fastest_lap_speed_kph",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "results"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_sprint_results_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "sprint_result_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "race_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "driver_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "constructor_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "status_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "car_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "grid_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "final_position",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "position_order",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "points",
+						"type": "decimal",
+						"precision": 6,
+						"scale": 2
+					},
+					{
+						"name": "laps_completed",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "sprint_time_ms",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "fastest_lap_number",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "fastest_lap_ms",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "sprint_results"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dw_silver_status_sql')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_formula1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "silver"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "status_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "status_description",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "silver",
+					"table": "status"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_circuits')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_circuits_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeCircuits"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_circuits_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeCircuits"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          circuitId as string,",
+						"          circuitRef as string,",
+						"          name as string,",
+						"          location as string,",
+						"          country as string,",
+						"          lat as string,",
+						"          lng as string,",
+						"          alt as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeCircuits",
+						"bronzeCircuits sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          circuitId as string,",
+						"          circuitRef as string,",
+						"          name as string,",
+						"          location as string,",
+						"          country as string,",
+						"          lat as string,",
+						"          lng as string,",
+						"          alt as string,",
+						"          url as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          circuitId,",
+						"          circuitRef,",
+						"          name,",
+						"          location,",
+						"          country,",
+						"          lat,",
+						"          lng,",
+						"          alt,",
+						"          url",
+						"     )) ~> sinkBronzeCircuits"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_constructors')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_constructors_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeConstructors"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_constructors_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeConstructors"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          constructorId as string,",
+						"          constructorRef as string,",
+						"          name as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeConstructors",
+						"bronzeConstructors sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          constructorId as string,",
+						"          constructorRef as string,",
+						"          name as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          constructorId,",
+						"          constructorRef,",
+						"          name,",
+						"          nationality,",
+						"          url",
+						"     )) ~> sinkBronzeConstructors"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_drivers')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_drivers_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeDrivers"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_drivers_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeDrivers"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          driverId as string,",
+						"          driverRef as string,",
+						"          number as string,",
+						"          code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeDrivers",
+						"bronzeDrivers sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          driverId as string,",
+						"          driverRef as string,",
+						"          number as string,",
+						"          code as string,",
+						"          forename as string,",
+						"          surname as string,",
+						"          dob as string,",
+						"          nationality as string,",
+						"          url as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          driverId,",
+						"          driverRef,",
+						"          number,",
+						"          code,",
+						"          forename,",
+						"          surname,",
+						"          dob,",
+						"          nationality,",
+						"          url",
+						"     )) ~> sinkBronzeDrivers"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_lap_times')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_lap_times_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeLapTimes"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_lap_times_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeLapTimes"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          lap as string,",
+						"          position as string,",
+						"          time as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeLapTimes",
+						"bronzeLapTimes sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          lap as string,",
+						"          position as string,",
+						"          time as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raceId,",
+						"          driverId,",
+						"          lap,",
+						"          position,",
+						"          time,",
+						"          milliseconds",
+						"     )) ~> sinkBronzeLapTimes"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_pit_stops')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_pit_stops_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzePitStops"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_pit_stops_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzePitStops"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          stop as string,",
+						"          lap as string,",
+						"          time as string,",
+						"          duration as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzePitStops",
+						"bronzePitStops sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          stop as string,",
+						"          lap as string,",
+						"          time as string,",
+						"          duration as string,",
+						"          milliseconds as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raceId,",
+						"          driverId,",
+						"          stop,",
+						"          lap,",
+						"          time,",
+						"          duration,",
+						"          milliseconds",
+						"     )) ~> sinkBronzePitStops"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_qualifying')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_qualifying_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeQualifying"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_qualifying_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeQualifying"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          qualifyId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          position as string,",
+						"          q1 as string,",
+						"          q2 as string,",
+						"          q3 as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeQualifying",
+						"bronzeQualifying sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          qualifyId as string,",
+						"          raceId as string,",
+						"          driverId as string,",
+						"          constructorId as string,",
+						"          number as string,",
+						"          position as string,",
+						"          q1 as string,",
+						"          q2 as string,",
+						"          q3 as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          qualifyId,",
+						"          raceId,",
+						"          driverId,",
+						"          constructorId,",
+						"          number,",
+						"          position,",
+						"          q1,",
+						"          q2,",
+						"          q3",
+						"     )) ~> sinkBronzeQualifying"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_bronze_races')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "bronze"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "bronze_races_csv",
+								"type": "DatasetReference"
+							},
+							"name": "bronzeRaces"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "dw_bronze_races_sql",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBronzeRaces"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          raceId as string,",
+						"          year as string,",
+						"          round as string,",
+						"          circuitId as string,",
+						"          name as string,",
+						"          date as string,",
+						"          time as string,",
+						"          url as string,",
+						"          fp1_date as string,",
+						"          fp1_time as string,",
+						"          fp2_date as string,",
+						"          fp2_time as string,",
+						"          fp3_date as string,",
+						"          fp3_time as string,",
+						"          quali_date as string,",
+						"          quali_time as string,",
+						"          sprint_date as string,",
+						"          sprint_time as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> bronzeRaces",
+						"bronzeRaces sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          raceId as string,",
+						"          year as string,",
+						"          round as string,",
+						"          circuitId as string,",
+						"          name as string,",
+						"          date as string,",
+						"          time as string,",
+						"          url as string,",
+						"          fp1_date as string,",
+						"          fp1_time as string,",
+						"          fp2_date as string,",
+						"          fp2_time as string,",
+						"          fp3_date as string,",
+						"          fp3_time as string,",
+						"          quali_date as string,",
+						"          quali_time as string,",
+						"          sprint_date as string,",
+						"          sprint_time as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          raceId,",
+						"          year,",
+						"          round,",
+						"          circuitId,",
+						"          name,",
+						"          date,",
+						"          time,",
+						"          url,",
+						"          fp1_date,",
+						"          fp1_time,",
+						"          fp2_date,",
+						"          fp2_time,",
+						"          fp3_date,",
+						"          fp3_time,",
+						"          quali_date,",
+						"          quali_time,",
+						"          sprint_date,",
+						"          sprint_time",
+						"     )) ~> sinkBronzeRaces"
+					]
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
